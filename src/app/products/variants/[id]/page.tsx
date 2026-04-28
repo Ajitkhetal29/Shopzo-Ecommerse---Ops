@@ -73,9 +73,9 @@ export default function ProductVariantsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-gray-500 dark:text-gray-400">Loading...</p>
+      <div className="py-10">
+        <div className="mx-auto max-w-3xl">
+          <p className="text-slate-500 dark:text-slate-400">Loading...</p>
         </div>
       </div>
     );
@@ -83,15 +83,15 @@ export default function ProductVariantsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4">
-        <div className="max-w-3xl mx-auto">
+      <div className="py-10">
+        <div className="mx-auto max-w-3xl">
           <Link
             href="/products"
-            className="text-sm text-gray-600 dark:text-gray-400 hover:underline mb-4 inline-block"
+            className="mb-4 inline-block text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
           >
             ← Back to products
           </Link>
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-800 dark:text-red-200">
+          <div className="rounded-xl border border-red-200/80 bg-red-50/90 p-4 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
             {error}
           </div>
         </div>
@@ -100,34 +100,33 @@ export default function ProductVariantsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4 sm:px-6">
-      <div className="max-w-3xl mx-auto">
+    <div className="mx-auto max-w-3xl space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div>
             <Link
               href={`/products/${productId}`}
-              className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-2 inline-flex items-center gap-1"
+              className="mb-2 inline-flex items-center gap-1 text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
             >
               ← {productName || "Product"}
             </Link>
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">Variants</h1>
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">Variants</h1>
           </div>
           <button
             type="button"
             onClick={() => router.push(`/products/variants/add/${productId}`)}
-            className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium text-sm hover:bg-gray-800 dark:hover:bg-gray-200"
+            className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
           >
             Add variant
           </button>
         </div>
 
         {variants.length === 0 ? (
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-8 text-center">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">No variants yet.</p>
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
+            <p className="mb-4 text-slate-600 dark:text-slate-400">No variants yet.</p>
             <button
               type="button"
               onClick={() => router.push(`/products/variants/add/${productId}`)}
-              className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium text-sm"
+              className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
             >
               Add variant
             </button>
@@ -137,7 +136,7 @@ export default function ProductVariantsPage() {
             {variants.map((v) => (
               <li
                 key={v._id}
-                className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-4 flex flex-col sm:flex-row sm:items-start gap-4"
+                className="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90 sm:flex-row sm:items-start"
               >
                 <div className="flex gap-2 flex-wrap">
                   {(v.images ?? []).map((img, i) => (
@@ -146,21 +145,21 @@ export default function ProductVariantsPage() {
                       key={`${v._id}-${i}`}
                       src={img.url}
                       alt=""
-                      className="w-20 h-20 object-cover rounded-lg bg-gray-100 dark:bg-slate-700"
+                      className="h-20 w-20 rounded-lg bg-slate-100 object-cover dark:bg-slate-800"
                     />
                   ))}
                 </div>
                 <div className="flex-1 min-w-0 space-y-1 text-sm">
-                  <p className="font-medium text-gray-900 dark:text-white">
+                  <p className="font-semibold text-slate-900 dark:text-white">
                     {v.size} · {v.color} · ${v.price}
                   </p>
-                  <p className="text-gray-500 dark:text-gray-400 font-mono text-xs break-all">SKU: {v.sku}</p>
+                  <p className="break-all font-mono text-xs text-slate-500 dark:text-slate-400">SKU: {v.sku}</p>
                 </div>
                 <div className="flex gap-2 flex-shrink-0">
                   <button
                     type="button"
                     onClick={() => router.push(`/products/variants/edit/${v._id}`)}
-                    className="px-3 py-1.5 text-sm border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700"
+                    className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-800 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
                   >
                     Edit
                   </button>
@@ -179,8 +178,6 @@ export default function ProductVariantsPage() {
             ))}
           </ul>
         )}
-      </div>
-
       {deleteOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"

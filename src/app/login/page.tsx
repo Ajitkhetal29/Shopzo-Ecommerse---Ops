@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
 import { API_ENDPOINTS } from "@/lib/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/store/slices/authSlice";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { RootState } from "@/store";
 import ThemeToggleButton from "@/app/components/ThemeToggleButton";
 import { publicUrl } from "@/lib/basePath";
@@ -14,9 +14,7 @@ import { publicUrl } from "@/lib/basePath";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const pathname = usePathname();
   const user = useSelector((state: RootState) => state.auth.user);
-  const hasRedirected = useRef(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,17 +35,14 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (pathname !== "/login" || hasRedirected.current) return;
-
     if (user) {
-      hasRedirected.current = true;
       const deptCode = getDepartmentCode(user.department);
       if (deptCode === "admin") router.push("/dashboards/admin");
       else if (deptCode === "delivery") router.push("/dashboards/delivery");
       else if (deptCode === "support") router.push("/dashboards/support");
       else if (deptCode === "vendor") router.push("/dashboards/vendor");
     }
-  }, [user, router, pathname]);
+  }, [user, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -88,80 +83,47 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative flex min-h-dvh w-full overflow-x-hidden pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-[env(safe-area-inset-top)]">
-      <div className="pointer-events-none absolute inset-0 bg-slate-100 dark:bg-slate-950" aria-hidden />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(245,158,11,0.16),transparent)] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(245,158,11,0.12),transparent)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjEiIGZpbGw9InJnYmEoMTUsMjMsNDIsMC4wNikiLz48L3N2Zz4=')] opacity-70 dark:opacity-40"
-        aria-hidden
-      />
+    <div className="relative min-h-dvh overflow-x-hidden bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_58%_40%_at_20%_15%,rgba(245,158,11,0.12),transparent),radial-gradient(ellipse_42%_34%_at_85%_90%,rgba(14,165,233,0.08),transparent)] dark:bg-[radial-gradient(ellipse_58%_40%_at_20%_15%,rgba(245,158,11,0.1),transparent),radial-gradient(ellipse_42%_34%_at_85%_90%,rgba(14,165,233,0.06),transparent)]" aria-hidden />
 
       <ThemeToggleButton
         className={[
-          "fixed z-20 rounded-full border p-2.5 shadow-sm backdrop-blur-sm",
+          "fixed right-4 top-4 z-20 rounded-full border p-2.5 shadow-sm backdrop-blur-sm",
           "border-slate-200/90 bg-white/95 text-slate-600 hover:bg-slate-50",
-          "dark:border-slate-600/80 dark:bg-slate-800/95 dark:text-amber-100/90 dark:hover:bg-slate-700/90",
-          "right-[max(0.75rem,env(safe-area-inset-right))] top-[max(0.75rem,env(safe-area-inset-top))]",
+          "dark:border-slate-700/80 dark:bg-slate-900/95 dark:text-amber-200/90 dark:hover:bg-slate-800/95",
         ].join(" ")}
       />
 
-      <div className="relative z-[1] flex w-full flex-1 flex-col lg:min-h-0 lg:flex-row">
-        <div
-          className={[
-            "relative flex flex-col border-b",
-            "border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900",
-            "dark:border-white/10 dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-white",
-            "px-4 py-4 sm:px-6 sm:py-6",
-            "shrink-0 lg:max-w-[44%] lg:min-h-dvh lg:flex-1 lg:justify-between lg:border-b-0 lg:border-r lg:border-slate-200/80 lg:px-12 lg:py-12 dark:lg:border-white/10",
-          ].join(" ")}
-        >
-          <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-br from-amber-400/[0.07] via-transparent to-slate-200/40 dark:from-amber-500/20 dark:via-transparent dark:to-slate-950/90"
-            aria-hidden
-          />
-          <div className="relative max-w-sm lg:max-w-none">
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.18em] text-amber-600 sm:text-xs dark:text-amber-300/90">
-              Shopzo
-            </p>
-            <h1 className="mt-1.5 text-2xl font-semibold leading-[1.15] tracking-tight text-slate-900 sm:mt-2.5 sm:text-3xl lg:text-4xl dark:text-white">
-              Operations
-              <span className="mt-0.5 block text-base font-normal text-slate-500 sm:mt-1 sm:text-lg dark:text-slate-300">
-                console
-              </span>
+      <div className="relative z-[1] grid min-h-dvh grid-cols-1 lg:grid-cols-[1.08fr_0.92fr]">
+        <section className="relative hidden border-r border-slate-200/80 bg-white/70 p-12 backdrop-blur lg:flex lg:flex-col lg:justify-between dark:border-slate-800/80 dark:bg-slate-900/50">
+          <div className="max-w-lg">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-300">Shopzo Ops</p>
+            <h1 className="mt-4 text-5xl font-semibold leading-[1.05] tracking-tight text-slate-900 dark:text-white">
+              Clean operations
+              <span className="mt-3 block text-2xl font-medium text-slate-500 dark:text-slate-300">for modern commerce teams</span>
             </h1>
-            <p className="mt-2.5 line-clamp-2 text-xs leading-snug text-slate-600 sm:mt-3 sm:line-clamp-none sm:text-sm sm:leading-relaxed dark:text-slate-400">
-              Catalog, orders, vendors & teams — your e‑commerce operations hub.
-            </p>
-            <p className="mt-2 text-[0.65rem] text-slate-500 sm:text-xs lg:hidden dark:text-slate-500">
-              Authorized staff only.
+            <p className="mt-6 max-w-md text-base leading-relaxed text-slate-600 dark:text-slate-400">
+              Manage products, inventory, vendors, and workflows in one streamlined workspace.
             </p>
           </div>
-          <p className="relative mt-4 hidden text-xs text-slate-500 lg:mt-0 lg:block dark:text-slate-500">
-            For authorized staff only.
-          </p>
-        </div>
 
-        <div
-          className={[
-            "flex min-h-0 flex-1 flex-col",
-            "bg-slate-50/95 dark:bg-slate-950/40",
-            "px-4 py-3 sm:px-6 sm:py-6 lg:justify-center lg:px-12 lg:py-8",
-            "items-stretch sm:items-center",
-            "lg:bg-white lg:dark:bg-slate-950/60",
-            "lg:shadow-[inset_1px_0_0_0_rgb(226_232_240_/_0.9)] lg:dark:shadow-[inset_1px_0_0_0_rgb(255_255_255_/_0.06)]",
-          ].join(" ")}
-        >
-          <div className="mx-auto w-full max-w-[380px] rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:max-w-[400px] sm:p-6 lg:max-w-[420px] dark:border-transparent dark:bg-transparent dark:p-0 dark:shadow-none lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none lg:dark:p-0">
-            <div className="mb-4 flex justify-center sm:mb-5 lg:mb-6">
-              <div className="relative h-12 w-[9.5rem] overflow-hidden sm:h-14 sm:w-[11rem] lg:h-16 lg:w-[12.5rem]">
+          <div className="rounded-2xl border border-slate-200/80 bg-white/80 p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/80">
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">Operations Console</p>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+              Unified control layer for catalogs, teams, and day-to-day execution.
+            </p>
+          </div>
+        </section>
+
+        <section className="flex items-center justify-center px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
+          <div className="w-full max-w-[430px] rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm sm:p-7 dark:border-slate-700/80 dark:bg-slate-900/95">
+            <div className="mb-6 flex justify-center">
+              <div className="relative h-14 w-[10.5rem] overflow-hidden sm:h-16 sm:w-[12rem]">
                 <Image
                   src={publicUrl("/shopzo_logo.png")}
                   alt="Shopzo"
                   fill
-                  sizes="(max-width: 640px) 152px, (max-width: 1024px) 176px, 200px"
+                  sizes="(max-width: 640px) 168px, 192px"
                   className="object-contain object-center scale-[1.55] dark:hidden"
                   priority
                 />
@@ -169,7 +131,7 @@ const LoginPage = () => {
                   src={publicUrl("/shopzo_logo_tp.png")}
                   alt=""
                   fill
-                  sizes="(max-width: 640px) 152px, (max-width: 1024px) 176px, 200px"
+                  sizes="(max-width: 640px) 168px, 192px"
                   className="hidden object-contain object-center scale-[1.55] dark:block"
                   priority
                   aria-hidden
@@ -177,20 +139,21 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <div className="mb-4 sm:mb-6 lg:mb-10">
-              <h2 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-2xl">
+            <div className="mb-6">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Welcome back</p>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
                 Sign in
               </h2>
-              <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 sm:mt-1.5 sm:text-sm">
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                 Work email and password
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-5" noValidate>
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
               <div>
                 <label
                   htmlFor="login-email"
-                  className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
+                  className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200"
                 >
                   Email
                 </label>
@@ -202,7 +165,7 @@ const LoginPage = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full rounded-xl border border-slate-200 bg-white/90 px-3 py-2.5 text-base text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/25 sm:px-4 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:focus:border-amber-500/50 dark:focus:ring-amber-500/20"
+                  className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-[0.95rem] text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/25 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-amber-500/50 dark:focus:ring-amber-500/20"
                   placeholder="you@company.com"
                 />
               </div>
@@ -210,7 +173,7 @@ const LoginPage = () => {
               <div>
                 <label
                   htmlFor="login-password"
-                  className="mb-1.5 block text-sm font-medium text-slate-800 dark:text-slate-200"
+                  className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200"
                 >
                   Password
                 </label>
@@ -223,7 +186,7 @@ const LoginPage = () => {
                     required
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full rounded-xl border border-slate-200 bg-white/90 py-2.5 pl-3 pr-12 text-base text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/25 sm:pl-4 dark:border-slate-600 dark:bg-slate-800/90 dark:text-slate-100 dark:focus:border-amber-500/50 dark:focus:ring-amber-500/20"
+                    className="h-11 w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-4 pr-12 text-[0.95rem] text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/25 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:border-amber-500/50 dark:focus:ring-amber-500/20"
                     placeholder="••••••••"
                   />
                   <button
@@ -246,16 +209,14 @@ const LoginPage = () => {
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-xl bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:ring-offset-2 focus:ring-offset-slate-100 disabled:cursor-not-allowed disabled:opacity-50 sm:py-3 dark:focus:ring-offset-slate-900"
-              >
+              <button type="submit" disabled={loading} className="h-11 w-full rounded-xl bg-amber-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:ring-offset-2 focus:ring-offset-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-slate-900">
                 {loading ? "Signing in…" : "Sign in"}
               </button>
             </form>
+
+            <p className="mt-5 text-center text-xs text-slate-500 dark:text-slate-400">Authorized personnel access only.</p>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
     pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
 
   return (
-    <div className="flex min-h-dvh w-full bg-slate-100 dark:bg-slate-950">
+    <div className="flex h-dvh w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
       {mobileNavOpen ? (
         <button
           type="button"
@@ -70,12 +70,12 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
 
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-40 flex w-[17.5rem] flex-col border-r border-slate-200 bg-white text-slate-700 shadow-xl transition-[transform,width] duration-200 ease-out dark:border-slate-700/80 dark:bg-slate-900 dark:text-slate-200 lg:static lg:z-0 lg:shadow-none",
+          "fixed inset-y-0 left-0 z-40 flex h-dvh w-[17.5rem] flex-col border-r border-slate-200/90 bg-white text-slate-700 transition-[transform,width] duration-200 ease-out dark:border-slate-700/80 dark:bg-slate-900 dark:text-slate-200 lg:z-30 lg:translate-x-0",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           collapsed ? "lg:w-[4rem]" : "lg:w-72",
         ].join(" ")}
       >
-        <div className="flex h-[3.75rem] shrink-0 items-center border-b border-slate-200 px-4 dark:border-white/10">
+        <div className="flex h-[3.75rem] shrink-0 items-center border-b border-slate-200/90 px-4 dark:border-white/10">
           <div className={`flex min-w-0 flex-1 items-center ${collapsed ? "justify-center px-0" : ""}`}>
             <Link
               href={brandHref}
@@ -95,23 +95,26 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
         </div>
 
         <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-2.5 py-4">
-          <ul className="space-y-1.5">
+          <ul className="space-y-1">
             {menuItems.map((item) => {
               const active = linkActive(item.href);
               return (
-                <li key={`${item.href}-${item.label}`}>
+                <li key={`${item.href}-${item.label}`} className="relative">
                   <Link
                     href={item.href}
                     onClick={() => setMobileNavOpen(false)}
                     className={[
                       "group flex items-center gap-3 rounded-xl px-3 py-3 text-[0.875rem] font-medium leading-snug transition-colors sm:text-[0.925rem]",
                       active
-                        ? "bg-amber-500/15 text-amber-700 shadow-sm ring-1 ring-amber-500/35 dark:text-amber-100"
+                        ? "bg-amber-50 text-amber-800 ring-1 ring-amber-500/30 dark:bg-amber-500/15 dark:text-amber-100"
                         : "text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.06] dark:hover:text-slate-100",
                       collapsed ? "justify-center px-2.5 py-3" : "",
                     ].join(" ")}
                     title={collapsed ? item.label : undefined}
                   >
+                    {active && !collapsed ? (
+                      <span className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r bg-amber-500" aria-hidden />
+                    ) : null}
                     <NavIcon href={item.href} label={item.label} active={active} className="h-5 w-5 shrink-0 sm:h-[1.325rem] sm:w-[1.325rem]" />
                     <span className={collapsed ? "sr-only" : "truncate"}>{item.label}</span>
                   </Link>
@@ -128,8 +131,8 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
         </div>
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex min-h-16 shrink-0 items-center gap-2 border-b border-slate-200/80 bg-white/95 px-3 py-2 backdrop-blur-md dark:border-slate-700/80 dark:bg-slate-900/95 sm:gap-3 sm:px-5">
+      <div className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-200 ease-out ${collapsed ? "lg:ml-[4rem]" : "lg:ml-72"}`}>
+        <header className="sticky top-0 z-20 flex min-h-16 shrink-0 items-center gap-2 border-b border-slate-200/80 bg-white px-3 py-2 dark:border-slate-700/80 dark:bg-slate-900 sm:gap-3 sm:px-5">
           <button
             type="button"
             className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden"
@@ -148,10 +151,10 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
           </button>
 
           <div className="min-w-0 flex-1 pl-0.5">
-            <p className="truncate text-base font-semibold tracking-tight text-slate-900 dark:text-white">
+            <p className="truncate text-lg font-semibold tracking-tight text-slate-900 dark:text-white">
               Operations workspace
             </p>
-            <p className="truncate text-[0.8125rem] leading-snug text-slate-500 dark:text-slate-400">
+            <p className="truncate text-sm leading-snug text-slate-500 dark:text-slate-400">
               Catalog, orders, vendors & teams
             </p>
           </div>
@@ -162,14 +165,14 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
               <input
                 type="search"
                 placeholder="Search anything..."
-                className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-700 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-amber-400/50"
+                className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-[0.9375rem] text-slate-700 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-amber-400/50"
               />
             </label>
           </div>
 
           <button
             type="button"
-            className="hidden shrink-0 rounded-xl bg-amber-600 px-3.5 py-2 text-[0.8125rem] font-semibold text-white shadow-sm transition hover:bg-amber-700 lg:inline-flex"
+            className="hidden shrink-0 rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white lg:inline-flex"
           >
             + New Order
           </button>
@@ -184,12 +187,12 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
 
           <div className="hidden min-w-0 items-center gap-3 sm:flex md:gap-4">
             <div className="min-w-0 text-right">
-              <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{user.name}</p>
-              <p className="max-w-[16rem] truncate text-[0.75rem] leading-snug text-slate-500 dark:text-slate-400">
+              <p className="truncate text-[0.9375rem] font-semibold text-slate-900 dark:text-slate-100">{user.name}</p>
+              <p className="max-w-[16rem] truncate text-xs leading-snug text-slate-500 dark:text-slate-400">
                 {deptLabel(user.department)} · {roleLabel(user.role)}
               </p>
               {user.email ? (
-                <p className="max-w-[16rem] truncate text-[0.6875rem] text-slate-400 dark:text-slate-500">{user.email}</p>
+                <p className="max-w-[16rem] truncate text-[0.75rem] text-slate-400 dark:text-slate-500">{user.email}</p>
               ) : null}
             </div>
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-sm font-semibold text-amber-800 dark:text-amber-200">
@@ -206,8 +209,8 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
           </button>
         </header>
 
-        <main className="min-h-0 flex-1 overflow-y-auto">
-          <div className="w-full px-3 py-5 sm:px-4 sm:py-6 lg:px-6 lg:py-8">{children}</div>
+        <main className="min-h-0 flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950">
+          <div className="w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-5 lg:py-6">{children}</div>
         </main>
       </div>
     </div>

@@ -128,15 +128,15 @@ const AddVariantPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 p-6">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+      <div className="py-10">
+        <p className="text-slate-600 dark:text-slate-400">Loading...</p>
       </div>
     );
   }
   if (error && !product) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 p-6 max-w-xl mx-auto">
-        <Link href="/products" className="text-sm text-gray-600 dark:text-gray-400 hover:underline mb-4 inline-block">
+      <div className="mx-auto max-w-xl py-8">
+        <Link href="/products" className="mb-4 inline-block text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
           ← Products
         </Link>
         <p className="text-red-600 dark:text-red-400">{error}</p>
@@ -146,25 +146,25 @@ const AddVariantPage = () => {
   if (!product) return <p className="p-6">Product not found</p>;
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-4 min-h-screen bg-gray-50 dark:bg-slate-900">
+    <div className="mx-auto max-w-xl space-y-5">
       <Link
         href={`/products/${id}`}
-        className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+        className="text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
       >
         ← {product.name}
       </Link>
-      <h1 className="text-xl font-bold text-gray-900 dark:text-white">Add variant · {product.name}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">Add variant · {product.name}</h1>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 bg-white dark:bg-slate-800 p-6 rounded-xl border border-gray-200 dark:border-slate-700"
+        className="space-y-4 rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90"
       >
         <div>
           <label className="block text-sm mb-1 text-gray-700 dark:text-gray-300">SKU</label>
           <input
             value={variant.sku}
             disabled
-            className="w-full border border-gray-300 dark:border-slate-600 p-2 rounded bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white"
+            className="w-full rounded-xl border border-slate-200 bg-slate-100 p-2.5 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
           />
         </div>
 
@@ -174,7 +174,7 @@ const AddVariantPage = () => {
             name="size"
             value={variant.size}
             onChange={handleChange}
-            className="w-full border border-gray-300 dark:border-slate-600 p-2 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-slate-900 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           >
             <option value="">Select</option>
             <option value="S">S</option>
@@ -190,7 +190,7 @@ const AddVariantPage = () => {
             name="color"
             value={variant.color}
             onChange={handleChange}
-            className="w-full border border-gray-300 dark:border-slate-600 p-2 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-slate-900 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
             placeholder="e.g. Red"
           />
         </div>
@@ -202,7 +202,7 @@ const AddVariantPage = () => {
             name="price"
             value={variant.price}
             onChange={handleChange}
-            className="w-full border border-gray-300 dark:border-slate-600 p-2 rounded bg-white dark:bg-slate-800 text-gray-900 dark:text-white"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-slate-900 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
           />
         </div>
 
@@ -214,7 +214,7 @@ const AddVariantPage = () => {
               type="file"
               multiple
               onChange={handleImages}
-              className="w-full border border-gray-300 dark:border-slate-600 p-2 rounded bg-white dark:bg-slate-800"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-sm dark:border-slate-700 dark:bg-slate-800"
             />
           )}
 
@@ -245,7 +245,7 @@ const AddVariantPage = () => {
 
         <button
           type="submit"
-          className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg font-medium disabled:opacity-50 hover:bg-gray-800 dark:hover:bg-gray-200"
+          className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
           disabled={!variant.size || !variant.color || !variant.price}
         >
           Create Variant

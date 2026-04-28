@@ -129,18 +129,17 @@ const AddProductPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
-      <div className="max-w-3xl mx-auto">
+    <div className="mx-auto max-w-3xl space-y-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">Add Product</h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">Add Product</h1>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             Create a new product with name, description, category and images
           </p>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-700">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white">Product Details</h2>
+        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
+          <div className="border-b border-slate-200/80 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-800/60">
+            <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white">Product Details</h2>
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 space-y-5">
@@ -163,7 +162,7 @@ const AddProductPage = () => {
     slug: generateUniqueSlug(name),
   }));
 }}
-                className="w-full px-4 py-2.5 text-gray-900 dark:text-white bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white transition-colors text-sm"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 placeholder="Enter product name"
               />
               
@@ -179,7 +178,7 @@ const AddProductPage = () => {
                 name="slug"
                 value={formData.slug}
                 disabled
-                className="w-full px-4 py-2.5 text-gray-900 dark:text-white bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white transition-colors text-sm"
+                className="w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
               />
             </div>
 
@@ -195,7 +194,7 @@ const AddProductPage = () => {
                 required
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 text-gray-900 dark:text-white bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white transition-colors text-sm resize-none"
+                className="w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 placeholder="Product description"
               />
             </div>
@@ -211,7 +210,7 @@ const AddProductPage = () => {
                 required
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 text-gray-900 dark:text-white bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white transition-colors text-sm"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
               >
                 <option value="">Select category</option>
                 {categories.map((cat) => (
@@ -232,7 +231,7 @@ const AddProductPage = () => {
                 name="subcategory"
                 value={formData.subcategory}
                 onChange={handleChange}
-                className="w-full px-4 py-2.5 text-gray-900 dark:text-white bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white transition-colors text-sm"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                 disabled={!formData.category}
               >
                 <option value="">Select subcategory</option>
@@ -249,7 +248,7 @@ const AddProductPage = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Images
               </label>
-              <label className="flex flex-col items-center justify-center w-full min-h-[120px] border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-slate-700/50 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+              <label className="flex min-h-[120px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800/70 dark:hover:bg-slate-800">
                 <input
                   type="file"
                   multiple
@@ -270,7 +269,7 @@ const AddProductPage = () => {
                   {images.map((img, index) => (
                     <div
                       key={img.name + img.size}
-                      className="group relative aspect-square rounded-lg overflow-hidden border border-gray-200 dark:border-slate-600 bg-gray-100 dark:bg-slate-700"
+                      className="group relative aspect-square overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800"
                     >
                       <img
                         src={URL.createObjectURL(img)}
@@ -294,7 +293,7 @@ const AddProductPage = () => {
             <div className="flex gap-3 pt-4">
               <Link
                 href="/products"
-                className="px-6 py-3 rounded-lg font-medium text-sm transition-all bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-gray-500 dark:focus:ring-slate-500 focus:ring-offset-2"
+                className="rounded-xl border border-slate-200 bg-slate-100 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
               >
                 Cancel
               </Link>
@@ -303,8 +302,8 @@ const AddProductPage = () => {
                 disabled={isSubmitting}
                 className={`flex-1 px-6 py-3 rounded-lg font-medium text-sm transition-all ${
                   isSubmitting
-                    ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:ring-offset-2 shadow-sm"
+                    ? "cursor-not-allowed bg-slate-400 text-white"
+                    : "bg-slate-900 text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/30 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
                 }`}
               >
                 {isSubmitting ? "Saving..." : "Add Product"}

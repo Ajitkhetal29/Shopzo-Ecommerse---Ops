@@ -96,35 +96,32 @@ const ProductPage = () => {
 
   if (loading && products.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-slate-900">
-        <div className="text-lg text-gray-600 dark:text-gray-400">Loading...</div>
+      <div className="flex items-center justify-center py-24">
+        <div className="text-base font-medium text-slate-600 dark:text-slate-400">Loading products...</div>
       </div>
     );
   }
 
   if (error && products.length === 0) {
     return (
-      <div className="p-4 bg-gray-50 dark:bg-slate-900 min-h-screen">
-        <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
-          {error}
-        </div>
+      <div className="rounded-2xl border border-red-200/80 bg-red-50/90 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+        {error}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
-            <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">Products</h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">Products</h1>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
               Manage products — click a product to view details
             </p>
           </div>
           <Link
             href="/products/add"
-            className="inline-flex items-center justify-center px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors shadow-sm"
+            className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -133,15 +130,15 @@ const ProductPage = () => {
           </Link>
         </div>
 
-        {/* Filters */}
-        <div className="mb-6 flex flex-wrap items-center gap-3 justify-end">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
+        <div className="flex flex-wrap items-center gap-3">
           <select
             value={categoryId}
             onChange={(e) => {
               setCategoryId(e.target.value);
               setPagination({ ...pagination, page: 1 });
             }}
-            className="px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
+            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           >
             <option value="">All categories</option>
             {categories.map((c) => (
@@ -156,7 +153,7 @@ const ProductPage = () => {
               setSubcategoryId(e.target.value);
               setPagination({ ...pagination, page: 1 });
             }}
-            className="px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
+            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             disabled={!categoryId}
           >
             <option value="">All subcategories</option>
@@ -172,7 +169,7 @@ const ProductPage = () => {
               setVendorId(e.target.value);
               setPagination({ ...pagination, page: 1 });
             }}
-            className="px-3 py-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
+            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           >
             <option value="">All vendors</option>
             {vendors.map((v) => (
@@ -190,18 +187,18 @@ const ProductPage = () => {
                 setVendorId("");
                 setPagination({ ...pagination, page: 1 });
               }}
-              className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700"
+              className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
             >
               Clear filters
             </button>
           )}
         </div>
+      </div>
 
-        {/* Product grid - ecommerce card style */}
-        {products.length === 0 ? (
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-12 text-center">
+      {products.length === 0 ? (
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-12 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+              className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-500"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -213,15 +210,15 @@ const ProductPage = () => {
                 d="M20 7l-8 4-8-4m0 0l8-4 8 4m0 0l-8 4m8-4v12M4 7v12"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No products</h3>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            <h3 className="mt-2 text-sm font-medium text-slate-900 dark:text-white">No products</h3>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               {categoryId || subcategoryId || vendorId ? "Try changing filters." : "Get started by creating a product."}
             </p>
             {!categoryId && !subcategoryId && !vendorId && (
               <div className="mt-6">
                 <Link
                   href="/products/add"
-                  className="inline-flex items-center px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                  className="inline-flex items-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
                 >
                   Add Product
                 </Link>
@@ -230,26 +227,26 @@ const ProductPage = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {products.map((product) => (
                 <button
                   key={product._id}
                   type="button"
                   onClick={() => router.push(`/products/${product._id}`)}
-                  className="group text-left bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md hover:border-gray-300 dark:hover:border-slate-600 transition-all"
+                  className="group overflow-hidden rounded-2xl border border-slate-200/80 bg-white text-left shadow-sm transition-all hover:border-amber-500/35 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/90"
                 >
-                  <div className="aspect-square bg-gray-100 dark:bg-slate-700 relative overflow-hidden">
+                  <div className="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
                     {product.images?.[0]?.url ? (
                       <img src={product.images[0].url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500 text-sm">No image</div>
+                      <div className="flex h-full w-full items-center justify-center text-sm text-slate-400 dark:text-slate-500">No image</div>
                     )}
                   </div>
                   <div className="p-3">
-                    <h3 className="font-medium text-gray-900 dark:text-white truncate group-hover:text-black dark:group-hover:text-white">
+                    <h3 className="truncate text-sm font-semibold text-slate-900 transition group-hover:text-amber-700 dark:text-white dark:group-hover:text-amber-200">
                       {product.name}
                     </h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                       {product.category.name}
                       {product.subcategory ? ` · ${product.subcategory.name}` : ""} · {product.vendor.name}
                     </p>
@@ -260,16 +257,16 @@ const ProductPage = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-2 flex-wrap">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
                 <button
                   type="button"
                   disabled={!hasPrev || loading}
                   onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700"
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   Previous
                 </button>
-                <span className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
+                <span className="px-4 py-2 text-sm text-slate-600 dark:text-slate-400">
                   Page {pagination.page} of {totalPages}
                   {totalCount > 0 && (
                     <span className="ml-1">
@@ -281,7 +278,7 @@ const ProductPage = () => {
                   type="button"
                   disabled={!hasNext || loading}
                   onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-slate-700"
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   Next
                 </button>
@@ -289,7 +286,6 @@ const ProductPage = () => {
             )}
           </>
         )}
-      </div>
     </div>
   );
 };

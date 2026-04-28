@@ -101,9 +101,9 @@ const ProductDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
-        <div className="max-w-4xl mx-auto flex items-center justify-center py-20">
-          <p className="text-gray-500 dark:text-gray-400">Loading...</p>
+      <div className="py-16">
+        <div className="mx-auto flex max-w-4xl items-center justify-center">
+          <p className="text-slate-500 dark:text-slate-400">Loading...</p>
         </div>
       </div>
     );
@@ -111,18 +111,18 @@ const ProductDetailPage = () => {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
-        <div className="max-w-4xl mx-auto">
+      <div className="py-8">
+        <div className="mx-auto max-w-4xl">
           <Link
             href="/products"
-            className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6"
+            className="mb-6 inline-flex items-center text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
           >
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back to products
           </Link>
-          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-8 text-center">
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
             <p className="text-red-600 dark:text-red-400">{error ?? "Product not found"}</p>
           </div>
         </div>
@@ -163,11 +163,11 @@ const ProductDetailPage = () => {
   const modalImageUrl = modalImageIdx != null ? images[modalImageIdx]?.url : null;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
-      <div className="max-w-4xl mx-auto">
+    <div className="py-8">
+      <div className="mx-auto max-w-4xl">
         <Link
           href="/products"
-          className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6"
+          className="mb-6 inline-flex items-center text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
         >
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -175,14 +175,14 @@ const ProductDetailPage = () => {
           Back to products
         </Link>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 overflow-hidden">
+        <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-8">
             {/* Image + thumbnails */}
             <div className="space-y-3">
               <button
                 type="button"
                 onClick={openImageModal}
-                className="aspect-square relative w-full bg-gray-100 dark:bg-slate-700 rounded-lg overflow-hidden cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                className="relative aspect-square w-full cursor-zoom-in overflow-hidden rounded-xl bg-slate-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 dark:bg-slate-800"
               >
                 {mainImage ? (
                   <Image
@@ -209,7 +209,7 @@ const ProductDetailPage = () => {
                         key={img.public_id ?? idx}
                         type="button"
                         onClick={() => selectThumbnail(slot + 1)}
-                        className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-slate-700 border-2 border-transparent hover:border-gray-400 dark:hover:border-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500"
+                        className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border-2 border-transparent bg-slate-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-slate-500 hover:border-slate-400 dark:bg-slate-800 dark:hover:border-slate-500"
                       >
                         <Image
                           src={img.url}
@@ -228,47 +228,47 @@ const ProductDetailPage = () => {
 
             {/* Info */}
             <div className="flex flex-col">
-              <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+              <h1 className="mb-2 text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
                 {product.name}
               </h1>
               {product.slug && (
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">/{product.slug}</p>
+                <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">/{product.slug}</p>
               )}
 
               <div className="space-y-3 mb-6">
                 <div>
-                  <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Category</span>
-                  <p className="text-gray-900 dark:text-white">
+                  <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Category</span>
+                  <p className="text-slate-900 dark:text-white">
                     {product.category?.name ?? "—"}
                   </p>
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Subcategory</span>
-                  <p className="text-gray-900 dark:text-white">
+                  <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Subcategory</span>
+                  <p className="text-slate-900 dark:text-white">
                     {product.subcategory?.name ?? "—"}
                   </p>
                 </div>
               </div>
 
               <div className="flex-1">
-                <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Description</span>
-                <p className="mt-1 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Description</span>
+                <p className="mt-1 whitespace-pre-wrap text-slate-700 dark:text-slate-300">
                   {product.description || "No description."}
                 </p>
               </div>
 
-              <div className="flex gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-slate-700">
+              <div className="mt-8 flex gap-3 border-t border-slate-200 pt-6 dark:border-slate-700">
                 <Link
                   href={`/products/edit/${id}`}
-                  className="px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200"
+                  className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
                 >
                   Edit
                 </Link>
                 <Link
                   href={`/products/variants/${id}`}
-                  className="px-4  py-2 bg-yellow-200  dark:bg-bg-yeloow-200  text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200"
+                  className="rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-800 transition hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                 >
-                  variants
+                  Variants
                 </Link>
                 <button
                   type="button"
