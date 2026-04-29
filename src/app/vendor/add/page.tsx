@@ -128,8 +128,8 @@ export default function AddVendorPage() {
   };
 
   return (
-    <div className="space-y-7 sm:space-y-8">
-      <div className="border-b border-slate-200/80 pb-6 dark:border-slate-700/60">
+    <div className="space-y-6 pb-10">
+      <div className="rounded-3xl border border-slate-200/80 bg-gradient-to-r from-white to-amber-50/70 px-6 py-6 shadow-sm dark:border-slate-700/60 dark:from-slate-900/70 dark:to-slate-900/30">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl lg:text-[2rem] lg:leading-tight">
           Add New Vendor
         </h1>
@@ -138,9 +138,9 @@ export default function AddVendorPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_460px]">
-        <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-card shadow-sm dark:border-slate-600/80 dark:bg-slate-800/80">
-          <div className="border-b border-slate-200/80 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-700/50">
+      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_520px]">
+        <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-card shadow-[0_12px_35px_rgba(15,23,42,0.12)] dark:border-slate-600/80 dark:bg-slate-800/80">
+          <div className="border-b border-slate-200/80 bg-slate-50/80 px-6 py-4 dark:border-slate-700 dark:bg-slate-700/50">
             <h2 className="text-base font-semibold text-slate-900 dark:text-white">Select Location</h2>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Click on map or search an address</p>
           </div>
@@ -162,9 +162,12 @@ export default function AddVendorPage() {
               </p>
             </div>
           ) : null}
+          <div className="border-t border-slate-200/80 bg-slate-50/70 px-6 py-2.5 text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-400">
+            Tip: Click anywhere on map or select a place from search to auto-fill address.
+          </div>
         </div>
 
-        <div className="relative rounded-2xl border border-slate-200/80 bg-card shadow-sm dark:border-slate-600/80 dark:bg-slate-800/80">
+        <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-card shadow-[0_12px_35px_rgba(15,23,42,0.12)] dark:border-slate-600/80 dark:bg-slate-800/80 xl:sticky xl:top-20">
           <div className="border-b border-slate-200/80 bg-slate-50 px-6 py-4 dark:border-slate-700 dark:bg-slate-700/50">
             <h2 className="text-base font-semibold text-slate-900 dark:text-white">Vendor Details</h2>
           </div>
@@ -181,7 +184,7 @@ export default function AddVendorPage() {
             </div>
           ) : null}
 
-          <div className="space-y-5 p-6">
+          <div className="space-y-5 p-6 md:p-7">
             <div>
               <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
                 Vendor Name <span className="text-red-500">*</span>
@@ -365,7 +368,7 @@ export default function AddVendorPage() {
               />
             </div>
 
-            <div className="flex justify-end gap-3 border-t border-slate-200/80 pt-5 dark:border-slate-700">
+            <div className="flex justify-end gap-3 border-t border-slate-200/80 pt-6 dark:border-slate-700">
               <button
                 type="button"
                 onClick={() => router.push("/vendor")}
@@ -377,7 +380,7 @@ export default function AddVendorPage() {
                 type="submit"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className={`inline-flex h-10 items-center rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition-colors ${
+                className={`inline-flex h-10 min-w-32 justify-center items-center rounded-xl px-5 text-sm font-semibold text-white shadow-sm transition-colors ${
                   isSubmitting
                     ? "cursor-not-allowed bg-amber-400"
                     : "bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500/40"

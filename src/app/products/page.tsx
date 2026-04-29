@@ -32,7 +32,7 @@ const ProductPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: LIMIT,
   });
 
   const fetchProducts = async () => {
@@ -91,6 +91,8 @@ const ProductPage = () => {
   const totalPages = Math.ceil(totalCount / pagination.limit) || 1;
   const hasPrev = pagination.page > 1;
   const hasNext = pagination.page < totalPages;
+  const startCount = totalCount === 0 ? 0 : (pagination.page - 1) * pagination.limit + 1;
+  const endCount = Math.min(pagination.page * pagination.limit, totalCount);
 
 
 
@@ -257,31 +259,72 @@ const ProductPage = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-                <button
-                  type="button"
-                  disabled={!hasPrev || loading}
-                  onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
-                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                >
-                  Previous
-                </button>
-                <span className="px-4 py-2 text-sm text-slate-600 dark:text-slate-400">
-                  Page {pagination.page} of {totalPages}
-                  {totalCount > 0 && (
-                    <span className="ml-1">
-                      ({totalCount} {totalCount === 1 ? "product" : "products"})
-                    </span>
-                  )}
-                </span>
-                <button
-                  type="button"
-                  disabled={!hasNext || loading}
-                  onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
-                  className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                >
-                  Next
-                </button>
+              <div className="mt-8 flex flex-col gap-3 border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800/60 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <div className="text-sm text-slate-600 dark:text-slate-300">
+                  Showing {startCount} to {endCount} of {totalCount} {totalCount === 1 ? "product" : "products"}
+                </div>
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    disabled={!hasPrev || loading}
+                    onClick={() => setPagination((prev) => ({ ...prev, page: Math.max(prev.page - 1, 1) }))}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                      !hasPrev || loading
+                        ? "cursor-not-allowed bg-slate-200 text-slate-400 dark:bg-slate-700 dark:text-slate-500"
+                        : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
+                    }`}
+                  >
+                    Previous
+                  </button>
+
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const pageNum = pagination.page - 2 + i;
+                    if (pageNum <= 0 || pageNum > totalPages) return null;
+                    return (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => setPagination((prev) => ({ ...prev, page: pageNum }))}
+                        className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                          pagination.page === pageNum
+                            ? "bg-amber-600 text-white"
+                            : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+
+                  <button
+                    type="button"
+                    disabled={!hasNext || loading}
+                    onClick={() => setPagination((prev) => ({ ...prev, page: prev.page + 1 }))}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                      !hasNext || loading
+                        ? "cursor-not-allowed bg-slate-200 text-slate-400 dark:bg-slate-700 dark:text-slate-500"
+                        : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
+                    }`}
+                  >
+                    Next
+                  </button>
+
+                  <select
+                    value={pagination.limit}
+                    onChange={(e) =>
+                      setPagination((prev) => ({
+                        ...prev,
+                        limit: parseInt(e.target.value, 10),
+                        page: 1,
+                      }))
+                    }
+                    className="ml-1 h-9 rounded-lg border border-slate-300 bg-white px-2 text-sm text-slate-700 outline-none transition focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
+                  >
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={50}>50</option>
+                  </select>
+                </div>
               </div>
             )}
           </>

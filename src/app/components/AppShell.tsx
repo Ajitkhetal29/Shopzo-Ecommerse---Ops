@@ -170,12 +170,12 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
             </label>
           </div>
 
-          <button
-            type="button"
+          <Link
+            href="/map-test"
             className="hidden shrink-0 rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white lg:inline-flex"
           >
-            + New Order
-          </button>
+            Map Test
+          </Link>
 
           <ThemeToggleButton
             className={[
