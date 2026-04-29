@@ -151,7 +151,7 @@ export default function ProductVariantsPage() {
                 </div>
                 <div className="flex-1 min-w-0 space-y-1 text-sm">
                   <p className="font-semibold text-slate-900 dark:text-white">
-                    {v.size} · {v.color} · ${v.price}
+                    {v.size} · {v.color} · Rs {v.price}
                   </p>
                   <p className="break-all font-mono text-xs text-slate-500 dark:text-slate-400">SKU: {v.sku}</p>
                 </div>
