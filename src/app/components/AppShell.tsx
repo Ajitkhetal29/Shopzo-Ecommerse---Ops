@@ -14,7 +14,6 @@ type AppShellProps = {
   children: React.ReactNode;
   menuItems: NavItem[];
   user: User;
-  /** Usually the role’s “Dashboard” href from the menu */
   brandHref: string;
   onLogout: () => void | Promise<void>;
 };
@@ -43,8 +42,8 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
   }, []);
 
   const toggleCollapsed = useCallback(() => {
-    setCollapsed((c) => {
-      const next = !c;
+    setCollapsed((current) => {
+      const next = !current;
       try {
         localStorage.setItem(SIDEBAR_KEY, next ? "1" : "0");
       } catch {
@@ -55,14 +54,14 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
   }, []);
 
   const linkActive = (href: string) =>
-    pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+    href !== "#" && (pathname === href || (href !== "/" && pathname.startsWith(`${href}/`)));
 
   return (
-    <div className="flex h-dvh w-full overflow-hidden bg-slate-100 dark:bg-slate-950">
+    <div className="flex h-dvh w-full overflow-hidden bg-[#f4f7fb] text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       {mobileNavOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-30 bg-slate-950/60 lg:hidden"
           aria-label="Close menu"
           onClick={() => setMobileNavOpen(false)}
         />
@@ -70,31 +69,28 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
 
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-40 flex h-dvh w-[17.5rem] flex-col border-r border-slate-200/90 bg-white text-slate-700 transition-[transform,width] duration-200 ease-out dark:border-slate-700/80 dark:bg-slate-900 dark:text-slate-200 lg:z-30 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex h-dvh w-[17.5rem] flex-col border-r border-slate-950/10 bg-slate-950 text-slate-300 shadow-2xl shadow-slate-950/10 transition-[transform,width] duration-200 ease-out dark:border-white/10 dark:bg-[#08111f] lg:z-30 lg:translate-x-0",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          collapsed ? "lg:w-[4rem]" : "lg:w-72",
+          collapsed ? "lg:w-[4.75rem]" : "lg:w-72",
         ].join(" ")}
       >
-        <div className="flex h-[3.75rem] shrink-0 items-center border-b border-slate-200/90 px-4 dark:border-white/10">
-          <div className={`flex min-w-0 flex-1 items-center ${collapsed ? "justify-center px-0" : ""}`}>
-            <Link
-              href={brandHref}
-              className="truncate leading-tight tracking-tight text-slate-900 dark:text-white"
-              onClick={() => setMobileNavOpen(false)}
-            >
-              {collapsed ? (
-                <span className="text-xl font-bold text-amber-400">S</span>
-              ) : (
-                <span className="text-[0.9375rem] font-semibold sm:text-base">
-                  <span className="text-amber-400">Shopzo</span>
-                  <span className="font-medium text-slate-400 dark:text-slate-500"> · Ops</span>
-                </span>
-              )}
-            </Link>
-          </div>
+        <div className="flex h-[4.25rem] shrink-0 items-center border-b border-white/10 px-4">
+          <Link
+            href={brandHref}
+            className={`flex min-w-0 flex-1 items-center gap-3 text-white ${collapsed ? "justify-center" : ""}`}
+            onClick={() => setMobileNavOpen(false)}
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400 text-lg font-black text-slate-950 shadow-lg shadow-amber-500/20">
+              S
+            </span>
+            <span className={collapsed ? "sr-only" : "min-w-0"}>
+              <span className="block text-sm font-bold uppercase tracking-[0.16em]">Shopzo</span>
+              <span className="block truncate text-xs font-medium text-slate-400">Operations panel</span>
+            </span>
+          </Link>
         </div>
 
-        <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-2.5 py-4">
+        <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-3 py-5">
           <ul className="space-y-1">
             {menuItems.map((item) => {
               const active = linkActive(item.href);
@@ -104,18 +100,16 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
                     href={item.href}
                     onClick={() => setMobileNavOpen(false)}
                     className={[
-                      "group flex items-center gap-3 rounded-xl px-3 py-3 text-[0.875rem] font-medium leading-snug transition-colors sm:text-[0.925rem]",
-                      active
-                        ? "bg-amber-50 text-amber-800 ring-1 ring-amber-500/30 dark:bg-amber-500/15 dark:text-amber-100"
-                        : "text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-white/[0.06] dark:hover:text-slate-100",
+                      "group flex items-center gap-3 rounded-xl px-3 py-3 text-[0.875rem] font-semibold leading-snug transition-colors sm:text-[0.925rem]",
+                      active ? "bg-white text-slate-950 shadow-sm" : "text-slate-400 hover:bg-white/[0.07] hover:text-white",
                       collapsed ? "justify-center px-2.5 py-3" : "",
                     ].join(" ")}
                     title={collapsed ? item.label : undefined}
                   >
                     {active && !collapsed ? (
-                      <span className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r bg-amber-500" aria-hidden />
+                      <span className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r bg-amber-400" aria-hidden />
                     ) : null}
-                    <NavIcon href={item.href} label={item.label} active={active} className="h-5 w-5 shrink-0 sm:h-[1.325rem] sm:w-[1.325rem]" />
+                    <NavIcon href={item.href} label={item.label} active={active} />
                     <span className={collapsed ? "sr-only" : "truncate"}>{item.label}</span>
                   </Link>
                 </li>
@@ -124,38 +118,39 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
           </ul>
         </nav>
 
-        <div className="shrink-0 border-t border-slate-200 px-3 py-2.5 dark:border-white/10">
+        <div className="shrink-0 border-t border-white/10 px-3 py-4">
           {!collapsed ? (
-            <p className="text-[0.625rem] font-medium uppercase tracking-[0.14em] text-slate-500 dark:text-slate-500">Operations</p>
+            <div className="rounded-2xl bg-white/[0.06] p-3 ring-1 ring-white/10">
+              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Workspace</p>
+              <p className="mt-1 truncate text-sm font-semibold text-slate-200">{deptLabel(user.department) || "Operations"}</p>
+            </div>
           ) : null}
         </div>
       </aside>
 
-      <div className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-200 ease-out ${collapsed ? "lg:ml-[4rem]" : "lg:ml-72"}`}>
-        <header className="sticky top-0 z-20 flex min-h-16 shrink-0 items-center gap-2 border-b border-slate-200/80 bg-white px-3 py-2 dark:border-slate-700/80 dark:bg-slate-900 sm:gap-3 sm:px-5">
+      <div className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-200 ease-out ${collapsed ? "lg:ml-[4.75rem]" : "lg:ml-72"}`}>
+        <header className="sticky top-0 z-20 flex min-h-16 shrink-0 items-center gap-2 border-b border-slate-200/70 bg-white/90 px-3 py-2 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85 sm:gap-3 sm:px-5">
           <button
             type="button"
-            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden"
+            className="rounded-xl p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10 lg:hidden"
             onClick={() => setMobileNavOpen(true)}
             aria-label="Open menu"
           >
-            <MenuIcon className="h-5 w-5" />
+            <MenuIcon />
           </button>
           <button
             type="button"
-            className="hidden rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 lg:inline-flex"
+            className="hidden rounded-xl p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10 lg:inline-flex"
             onClick={toggleCollapsed}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <CollapseIcon collapsed={collapsed} className="h-5 w-5" />
+            <CollapseIcon collapsed={collapsed} />
           </button>
 
           <div className="min-w-0 flex-1 pl-0.5">
-            <p className="truncate text-lg font-semibold tracking-tight text-slate-900 dark:text-white">
-              Operations workspace
-            </p>
+            <p className="truncate text-lg font-semibold tracking-tight text-slate-950 dark:text-white">Ops command center</p>
             <p className="truncate text-sm leading-snug text-slate-500 dark:text-slate-400">
-              Catalog, orders, vendors & teams
+              Catalog, warehouses, vendors and teams
             </p>
           </div>
 
@@ -164,15 +159,15 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
               <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
               <input
                 type="search"
-                placeholder="Search anything..."
-                className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-[0.9375rem] text-slate-700 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-amber-400/50"
+                placeholder="Search operations..."
+                className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-[0.9375rem] text-slate-700 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-amber-400/50"
               />
             </label>
           </div>
 
           <Link
             href="/map-test"
-            className="hidden shrink-0 rounded-xl bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white lg:inline-flex"
+            className="hidden shrink-0 rounded-xl bg-slate-950 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 lg:inline-flex"
           >
             Map Test
           </Link>
@@ -181,21 +176,19 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
             className={[
               "shrink-0 rounded-full border p-2 text-slate-600 transition-colors",
               "border-slate-200/90 bg-white hover:bg-slate-50",
-              "dark:border-slate-600 dark:bg-slate-800 dark:text-amber-100/90 dark:hover:bg-slate-700",
+              "dark:border-white/10 dark:bg-white/5 dark:text-amber-100/90 dark:hover:bg-white/10",
             ].join(" ")}
           />
 
           <div className="hidden min-w-0 items-center gap-3 sm:flex md:gap-4">
             <div className="min-w-0 text-right">
-              <p className="truncate text-[0.9375rem] font-semibold text-slate-900 dark:text-slate-100">{user.name}</p>
+              <p className="truncate text-[0.9375rem] font-semibold text-slate-950 dark:text-slate-100">{user.name}</p>
               <p className="max-w-[16rem] truncate text-xs leading-snug text-slate-500 dark:text-slate-400">
-                {deptLabel(user.department)} · {roleLabel(user.role)}
+                {deptLabel(user.department)} / {roleLabel(user.role)}
               </p>
-              {user.email ? (
-                <p className="max-w-[16rem] truncate text-[0.75rem] text-slate-400 dark:text-slate-500">{user.email}</p>
-              ) : null}
+              {user.email ? <p className="max-w-[16rem] truncate text-[0.75rem] text-slate-400 dark:text-slate-500">{user.email}</p> : null}
             </div>
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-sm font-semibold text-amber-800 dark:text-amber-200">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-sm font-semibold text-white dark:bg-amber-300 dark:text-slate-950">
               {user.name.charAt(0).toUpperCase()}
             </div>
           </div>
@@ -203,13 +196,13 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
           <button
             type="button"
             onClick={() => void onLogout()}
-            className="shrink-0 rounded-xl border border-slate-200 px-3 py-2 text-[0.8125rem] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800 sm:px-4 sm:text-sm"
+            className="shrink-0 rounded-xl border border-slate-200 px-3 py-2 text-[0.8125rem] font-semibold text-slate-700 hover:bg-slate-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/10 sm:px-4 sm:text-sm"
           >
             Log out
           </button>
         </header>
 
-        <main className="min-h-0 flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950">
+        <main className="min-h-0 flex-1 overflow-y-auto bg-[#f4f7fb] dark:bg-slate-950">
           <div className="w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-5 lg:py-6">{children}</div>
         </main>
       </div>
@@ -217,148 +210,40 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
   );
 }
 
-function NavIcon({ href, label, active, className }: { href: string; label: string; active: boolean; className?: string }) {
-  const c = [
-    className,
-    active ? "text-amber-600 dark:text-amber-300" : "text-slate-400 dark:text-amber-400/80",
-  ]
-    .filter(Boolean)
-    .join(" ");
-  if (label.toLowerCase().includes("analytics")) return <IconChart className={c} />;
-  if (href.includes("/dashboards")) return <IconLayoutDashboard className={c} />;
-  if (href.includes("/users")) return <IconUsers className={c} />;
-  if (href.includes("/warehouse")) return <IconWarehouse className={c} />;
-  if (href.includes("/vendor")) return <IconBuilding className={c} />;
-  if (href.includes("/genral")) return <IconSettings className={c} />;
-  if (href.includes("/products")) return <IconShopping className={c} />;
-  if (href.includes("/orders")) return <IconClipboard className={c} />;
-  if (href.includes("/support") || href.includes("/tickets")) return <IconLifebuoy className={c} />;
-  if (href.includes("/delivery") || href.includes("/team")) return <IconTruck className={c} />;
-  return <IconCircle className={c} />;
+function NavIcon({ href, label, active }: { href: string; label: string; active: boolean }) {
+  const c = `h-5 w-5 shrink-0 ${active ? "text-slate-950" : "text-slate-500 group-hover:text-amber-300"}`;
+  const text = `${href} ${label}`.toLowerCase();
+  if (text.includes("dashboard")) return <Icon className={c} path="M4 5h7v7H4V5Zm9 0h7v4h-7V5ZM4 14h7v5H4v-5Zm9-3h7v8h-7v-8Z" />;
+  if (text.includes("user")) return <Icon className={c} path="M16 11a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0c2.5.6 4 2 4 4v2H4v-2c0-2 1.5-3.4 4-4" />;
+  if (text.includes("warehouse")) return <Icon className={c} path="M3 21h18M5 21V8l7-4 7 4v13M8 21v-6h8v6M8 11h8" />;
+  if (text.includes("vendor")) return <Icon className={c} path="M4 10h16l-1-5H5l-1 5Zm1 0v9h14v-9M8 19v-5h4v5" />;
+  if (text.includes("product")) return <Icon className={c} path="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 9 8-4.5M12 12 4 7.5M12 12v9" />;
+  if (text.includes("order")) return <Icon className={c} path="M7 4h10l2 4v12H5V8l2-4Zm-2 4h14M9 12h6M9 16h4" />;
+  if (text.includes("support")) return <Icon className={c} path="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-5v.01M9.75 9a2.25 2.25 0 1 1 3.6 1.8c-.8.6-1.35 1.1-1.35 2.2" />;
+  if (text.includes("analytics")) return <Icon className={c} path="M4 19V5M4 19h16M8 15l3-3 3 2 4-6" />;
+  return <Icon className={c} path="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />;
+}
+
+function Icon({ className, path }: { className?: string; path: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d={path} />
+    </svg>
+  );
 }
 
 function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
-    </svg>
-  );
+  return <Icon className={className} path="M21 21l-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />;
 }
 
-function MenuIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-    </svg>
-  );
+function MenuIcon() {
+  return <Icon className="h-5 w-5" path="M4 6h16M4 12h16M4 18h16" />;
 }
 
-function CollapseIcon({ collapsed, className }: { collapsed: boolean; className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      {collapsed ? (
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-      ) : (
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-      )}
-    </svg>
-  );
-}
-
-function IconLayoutDashboard({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z" />
-    </svg>
-  );
-}
-
-function IconUsers({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-    </svg>
-  );
-}
-
-function IconWarehouse({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-    </svg>
-  );
-}
-
-function IconBuilding({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-    </svg>
-  );
-}
-
-function IconSettings({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-      />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  );
-}
-
-function IconShopping({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-    </svg>
-  );
-}
-
-function IconClipboard({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-    </svg>
-  );
-}
-
-function IconLifebuoy({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414" />
-    </svg>
-  );
-}
-
-function IconTruck({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
-      />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-    </svg>
-  );
-}
-
-function IconCircle({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-  );
-}
-
-function IconChart({ className }: { className?: string }) {
-  return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M7 14l3-3 3 2 5-6" />
-    </svg>
+function CollapseIcon({ collapsed }: { collapsed: boolean }) {
+  return collapsed ? (
+    <Icon className="h-5 w-5" path="M13 5l7 7-7 7M5 5l7 7-7 7" />
+  ) : (
+    <Icon className="h-5 w-5" path="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
   );
 }

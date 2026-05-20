@@ -208,7 +208,6 @@ const EditProductPage = () => {
             <p className="text-red-600 dark:text-red-400">{error}</p>
           </div>
         </div>
-      </div>
     );
   }
 
@@ -449,7 +448,6 @@ const EditProductPage = () => {
           </form>
         </div>
       </div>
-    </div>
   );
 };
 

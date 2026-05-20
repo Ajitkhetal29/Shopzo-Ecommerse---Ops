@@ -8,6 +8,47 @@ import { API_ENDPOINTS } from "@/lib/api";
 import { setDashboardStats } from "@/store/slices/dashboardStats";
 import type { AppDispatch, RootState } from "@/store";
 
+type Metric = {
+  name: string;
+  value: string;
+  href: string;
+  change: string;
+  tone: "amber" | "emerald" | "sky" | "violet" | "rose" | "slate";
+  icon: React.ReactNode;
+};
+
+const toneClasses: Record<Metric["tone"], string> = {
+  amber: "bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-500/10 dark:text-amber-200 dark:ring-amber-400/20",
+  emerald:
+    "bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-200 dark:ring-emerald-400/20",
+  sky: "bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-500/10 dark:text-sky-200 dark:ring-sky-400/20",
+  violet:
+    "bg-violet-50 text-violet-700 ring-violet-200 dark:bg-violet-500/10 dark:text-violet-200 dark:ring-violet-400/20",
+  rose: "bg-rose-50 text-rose-700 ring-rose-200 dark:bg-rose-500/10 dark:text-rose-200 dark:ring-rose-400/20",
+  slate:
+    "bg-slate-100 text-slate-700 ring-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:ring-white/10",
+};
+
+const pipeline = [
+  { label: "Placed", value: 142, width: "88%" },
+  { label: "Packed", value: 96, width: "64%" },
+  { label: "Out for delivery", value: 58, width: "42%" },
+  { label: "Resolved", value: 31, width: "28%" },
+];
+
+const alerts = [
+  { title: "Vendor onboarding pending", detail: "3 partners waiting for document approval", tone: "amber" },
+  { title: "Catalog review", detail: "12 products need price or image fixes", tone: "sky" },
+  { title: "Warehouse capacity", detail: "North hub is running at 82% capacity", tone: "rose" },
+];
+
+const tasks = [
+  { title: "Approve new vendors", meta: "Legal and GST checks", href: "/vendor" },
+  { title: "Review product queue", meta: "Images, variants, pricing", href: "/products" },
+  { title: "Assign warehouse owners", meta: "User access cleanup", href: "/warehouse" },
+  { title: "Refresh general settings", meta: "Roles, categories, departments", href: "/genral" },
+];
+
 const AdminDashboardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const dashboardStats = useSelector((state: RootState) => state.dashboardStats);
@@ -40,110 +81,267 @@ const AdminDashboardPage = () => {
     };
   }, [dispatch]);
 
-  const stats = useMemo(
+  const stats = useMemo<Metric[]>(
     () => [
-      { name: "Total Users", value: String(dashboardStats.totalUsers ?? 0), icon: "👥", href: "/users", iconWrap: "bg-amber-100 dark:bg-amber-500/20" },
-      { name: "Warehouses", value: String(dashboardStats.totalWarehouses ?? 0), icon: "🏭", href: "/warehouse", iconWrap: "bg-emerald-100 dark:bg-emerald-500/20" },
-      { name: "Vendors", value: String(dashboardStats.totalVendors ?? 0), icon: "🏢", href: "/vendor", iconWrap: "bg-sky-100 dark:bg-sky-500/20" },
-      { name: "Departments", value: String(dashboardStats.totalDepartments ?? 0), icon: "🏛️", href: "/genral", iconWrap: "bg-teal-100 dark:bg-teal-500/20" },
-      { name: "Roles", value: String(dashboardStats.totalRoles ?? 0), icon: "👔", href: "/genral", iconWrap: "bg-rose-100 dark:bg-rose-500/20" },
-      { name: "Orders", value: "0", icon: "📦", href: "/orders", iconWrap: "bg-violet-100 dark:bg-violet-500/20" },
-      { name: "Products", value: String(dashboardStats.totalProducts ?? 0), icon: "🛍️", href: "/products", iconWrap: "bg-orange-100 dark:bg-orange-500/20" },
+      {
+        name: "Users",
+        value: String(dashboardStats.totalUsers ?? 0),
+        href: "/users",
+        change: "Team access",
+        tone: "amber",
+        icon: <IconUsers />,
+      },
+      {
+        name: "Warehouses",
+        value: String(dashboardStats.totalWarehouses ?? 0),
+        href: "/warehouse",
+        change: "Fulfilment nodes",
+        tone: "emerald",
+        icon: <IconWarehouse />,
+      },
+      {
+        name: "Vendors",
+        value: String(dashboardStats.totalVendors ?? 0),
+        href: "/vendor",
+        change: "Seller network",
+        tone: "sky",
+        icon: <IconStore />,
+      },
+      {
+        name: "Products",
+        value: String(dashboardStats.totalProducts ?? 0),
+        href: "/products",
+        change: "Catalog SKUs",
+        tone: "violet",
+        icon: <IconBox />,
+      },
+      {
+        name: "Departments",
+        value: String(dashboardStats.totalDepartments ?? 0),
+        href: "/genral",
+        change: "Org setup",
+        tone: "rose",
+        icon: <IconGrid />,
+      },
+      {
+        name: "Roles",
+        value: String(dashboardStats.totalRoles ?? 0),
+        href: "/genral",
+        change: "Permissions",
+        tone: "slate",
+        icon: <IconShield />,
+      },
     ],
     [dashboardStats],
   );
 
-  const quickActions = [
-    { name: "Add User", href: "/users/add", icon: "➕" },
-    { name: "Add Warehouse", href: "/warehouse/add", icon: "🏭" },
-    { name: "Add Vendor", href: "/vendor/add", icon: "🏢" },
-    { name: "Manage General", href: "/genral", icon: "⚙️" },
-    { name: "View Orders", href: "/orders", icon: "📋" },
-    { name: "Manage Products", href: "/products", icon: "📦" },
-  ];
-
   return (
-    <div className="space-y-6 sm:space-y-7">
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90 sm:p-6">
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-[2.05rem] lg:text-[2.2rem] lg:leading-tight">
-          Admin dashboard
-        </h1>
-        <p className="mt-2 max-w-3xl text-[0.95rem] leading-relaxed text-slate-600 dark:text-slate-400">
-          Overview of your e-commerce operations — users, inventory, partners, and catalog health at a glance.
-        </p>
-      </div>
+    <div className="mx-auto flex w-full max-w-[96rem] flex-col gap-5">
+      <section className="overflow-hidden rounded-[1.5rem] border border-slate-200/80 bg-white shadow-sm dark:border-white/10 dark:bg-slate-900">
+        <div className="grid gap-0 lg:grid-cols-[minmax(0,1.55fr)_minmax(22rem,0.75fr)]">
+          <div className="p-5 sm:p-6 lg:p-8">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-200 dark:ring-emerald-400/20">
+                Live operations
+              </span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-white/10">
+                Admin workspace
+              </span>
+            </div>
+
+            <div className="mt-8 max-w-3xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-5xl">
+                Command center for Shopzo operations
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
+                Track teams, warehouses, vendors, catalog health, and fulfilment pressure from one focused control room.
+              </p>
+            </div>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                href="/products"
+                className="inline-flex h-11 items-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+              >
+                Review catalog
+              </Link>
+              <Link
+                href="/vendor"
+                className="inline-flex h-11 items-center rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/5"
+              >
+                Vendor queue
+              </Link>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-slate-950/50 lg:border-l lg:border-t-0 sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-slate-950 dark:text-white">Today overview</p>
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Operational throughput</p>
+              </div>
+              <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:bg-slate-900 dark:text-emerald-300 dark:ring-emerald-400/20">
+                Stable
+              </span>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              {pipeline.map((item) => (
+                <div key={item.label}>
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="font-medium text-slate-600 dark:text-slate-300">{item.label}</span>
+                    <span className="font-semibold tabular-nums text-slate-950 dark:text-white">{item.value}</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800">
+                    <div className="h-2 rounded-full bg-slate-950 dark:bg-amber-300" style={{ width: item.width }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {isLoading ? (
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
-          <div className="mx-auto mb-3 h-7 w-7 animate-spin rounded-full border-2 border-amber-600 border-t-transparent" />
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Loading metrics…</p>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 text-sm font-medium text-slate-600 shadow-sm dark:border-white/10 dark:bg-slate-900 dark:text-slate-300">
+          Loading dashboard metrics...
         </div>
       ) : null}
 
       {error ? (
         <div
-          className="rounded-2xl border border-red-200/80 bg-red-50/90 px-4 py-3 text-sm text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200"
+          className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200"
           role="alert"
         >
           {error}
         </div>
       ) : null}
 
-      <div>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-[0.1em] text-slate-500 dark:text-slate-400">
-          Key metrics
-        </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <Link
-              key={stat.name}
-              href={stat.href}
-              className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:border-amber-500/35 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/90"
-            >
-              <div className="flex items-center gap-4">
-                <div className={`${stat.iconWrap} flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg`}>
-                  <span aria-hidden>{stat.icon}</span>
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[0.8125rem] font-medium uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">{stat.name}</p>
-                  <p className="mt-1 text-[2rem] font-semibold tabular-nums leading-none tracking-tight text-slate-900 dark:text-white">
-                    {stat.value}
-                  </p>
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {stats.map((stat) => (
+          <Link
+            key={stat.name}
+            href={stat.href}
+            className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-white/10 dark:bg-slate-900 dark:hover:border-white/20"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className={`flex h-11 w-11 items-center justify-center rounded-xl ring-1 ${toneClasses[stat.tone]}`}>
+                {stat.icon}
+              </div>
+              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500 transition group-hover:text-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:group-hover:text-slate-200">
+                Open
+              </span>
+            </div>
+            <p className="mt-5 text-sm font-medium text-slate-500 dark:text-slate-400">{stat.name}</p>
+            <div className="mt-2 flex items-end justify-between gap-3">
+              <p className="text-4xl font-semibold tracking-tight text-slate-950 dark:text-white">{stat.value}</p>
+              <p className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+                {stat.change}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </section>
+
+      <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_24rem]">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-slate-900 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold tracking-tight text-slate-950 dark:text-white">Priority work</h2>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Fast actions for the ops team.</p>
+            </div>
+            <Link href="/genral" className="text-sm font-semibold text-slate-900 hover:text-amber-700 dark:text-slate-200 dark:hover:text-amber-300">
+              Manage settings
+            </Link>
+          </div>
+
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            {tasks.map((task) => (
+              <Link
+                key={task.title}
+                href={task.href}
+                className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 hover:bg-amber-50/50 dark:border-white/10 dark:hover:border-amber-400/30 dark:hover:bg-amber-400/10"
+              >
+                <p className="font-semibold text-slate-950 dark:text-white">{task.title}</p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{task.meta}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-slate-900 sm:p-6">
+          <h2 className="text-lg font-semibold tracking-tight text-slate-950 dark:text-white">Risk queue</h2>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Items that need admin attention.</p>
+          <div className="mt-5 space-y-3">
+            {alerts.map((alert) => (
+              <div key={alert.title} className="rounded-xl border border-slate-200 p-4 dark:border-white/10">
+                <div className="flex gap-3">
+                  <span
+                    className={[
+                      "mt-1 h-2.5 w-2.5 shrink-0 rounded-full",
+                      alert.tone === "amber" ? "bg-amber-500" : alert.tone === "sky" ? "bg-sky-500" : "bg-rose-500",
+                    ].join(" ")}
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-slate-950 dark:text-white">{alert.title}</p>
+                    <p className="mt-1 text-sm leading-5 text-slate-500 dark:text-slate-400">{alert.detail}</p>
+                  </div>
                 </div>
               </div>
-            </Link>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90 sm:p-6">
-        <h2 className="mb-1 text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Quick actions</h2>
-        <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">Shortcuts to common admin tasks</p>
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-6">
-          {quickActions.map((action) => (
-            <Link
-              key={action.name}
-              href={action.href}
-              className="flex min-h-[3.25rem] items-center rounded-xl border border-slate-200/80 px-3 py-3 transition-colors hover:border-amber-500/40 hover:bg-amber-50/80 dark:border-slate-700 dark:hover:border-amber-400/30 dark:hover:bg-amber-500/10 sm:px-4"
-            >
-              <span className="mr-3 text-xl" aria-hidden>
-                {action.icon}
-              </span>
-              <span className="text-sm font-semibold text-slate-900 dark:text-white">{action.name}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90 sm:p-6">
-        <h2 className="mb-1 text-xl font-semibold tracking-tight text-slate-900 dark:text-white">Recent activity</h2>
-        <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">Latest changes across the platform</p>
-        <div className="rounded-xl border border-dashed border-slate-200/90 py-14 text-center dark:border-slate-600/80">
-          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No recent activity to display</p>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };
+
+function IconUsers() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16 11a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0c2.5.6 4 2 4 4v2H4v-2c0-2 1.5-3.4 4-4" />
+    </svg>
+  );
+}
+
+function IconWarehouse() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 21h18M5 21V8l7-4 7 4v13M8 21v-6h8v6M8 11h8" />
+    </svg>
+  );
+}
+
+function IconStore() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 10h16l-1-5H5l-1 5Zm1 0v9h14v-9M8 19v-5h4v5" />
+    </svg>
+  );
+}
+
+function IconBox() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 9 8-4.5M12 12 4 7.5M12 12v9" />
+    </svg>
+  );
+}
+
+function IconGrid() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 0h7v7h-7v-7Z" />
+    </svg>
+  );
+}
+
+function IconShield() {
+  return (
+    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3 5 6v5c0 4.2 2.7 8 7 10 4.3-2 7-5.8 7-10V6l-7-3Z" />
+    </svg>
+  );
+}
 
 export default AdminDashboardPage;

@@ -312,7 +312,6 @@ const AddProductPage = () => {
           </form>
         </div>
       </div>
-    </div>
   );
 };
 
