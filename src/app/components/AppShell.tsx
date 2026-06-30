@@ -1,10 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { User } from "@/store/slices/authSlice";
-import ThemeToggleButton from "@/app/components/ThemeToggleButton";
+import ThemeToggle from "@/app/components/ThemeToggle";
+import { publicUrl } from "@/lib/basePath";
 
 const SIDEBAR_KEY = "shopzo-sidebar-collapsed";
 
@@ -32,6 +34,8 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -40,6 +44,19 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
       /* ignore */
     }
   }, []);
+
+  useEffect(() => {
+    if (!profileOpen) return;
+
+    const closeMenu = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", closeMenu);
+    return () => document.removeEventListener("mousedown", closeMenu);
+  }, [profileOpen]);
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed((current) => {
@@ -57,11 +74,11 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
     href !== "#" && (pathname === href || (href !== "/" && pathname.startsWith(`${href}/`)));
 
   return (
-    <div className="flex h-dvh w-full overflow-hidden bg-[#f4f7fb] text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <div className="flex h-dvh w-full overflow-hidden bg-shop-surface text-foreground">
       {mobileNavOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-30 bg-slate-950/60 lg:hidden"
+          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-[2px] lg:hidden"
           aria-label="Close menu"
           onClick={() => setMobileNavOpen(false)}
         />
@@ -69,28 +86,41 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
 
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-40 flex h-dvh w-[17.5rem] flex-col border-r border-slate-950/10 bg-slate-950 text-slate-300 shadow-2xl shadow-slate-950/10 transition-[transform,width] duration-200 ease-out dark:border-white/10 dark:bg-[#08111f] lg:z-30 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex h-dvh flex-col border-r border-shop-border bg-neutral-950 text-neutral-300 transition-[transform,width] duration-200 ease-out lg:z-30 lg:translate-x-0 dark:bg-neutral-950",
           mobileNavOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          collapsed ? "lg:w-[4.75rem]" : "lg:w-72",
+          collapsed ? "w-[4.75rem] lg:w-[4.75rem]" : "w-[17.5rem] lg:w-72",
         ].join(" ")}
       >
-        <div className="flex h-[4.25rem] shrink-0 items-center border-b border-white/10 px-4">
+        <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-4">
           <Link
             href={brandHref}
-            className={`flex min-w-0 flex-1 items-center gap-3 text-white ${collapsed ? "justify-center" : ""}`}
+            className={`flex min-w-0 flex-1 items-center gap-3 ${collapsed ? "justify-center" : ""}`}
             onClick={() => setMobileNavOpen(false)}
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-400 text-lg font-black text-slate-950 shadow-lg shadow-amber-500/20">
-              S
-            </span>
-            <span className={collapsed ? "sr-only" : "min-w-0"}>
-              <span className="block text-sm font-bold uppercase tracking-[0.16em]">Shopzo</span>
-              <span className="block truncate text-xs font-medium text-slate-400">Operations panel</span>
-            </span>
+            {collapsed ? (
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-shop-accent text-sm font-bold text-white">
+                S
+              </span>
+            ) : (
+              <Image
+                src={publicUrl("/shopzo_logo_tp.png")}
+                alt="Shopzo"
+                width={110}
+                height={36}
+                className="h-7 w-auto object-contain"
+                priority
+              />
+            )}
           </Link>
         </div>
 
-        <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-3 py-5">
+        {!collapsed ? (
+          <p className="px-5 pt-4 text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-neutral-500">
+            Operations
+          </p>
+        ) : null}
+
+        <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden px-3 py-4">
           <ul className="space-y-1">
             {menuItems.map((item) => {
               const active = linkActive(item.href);
@@ -100,14 +130,19 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
                     href={item.href}
                     onClick={() => setMobileNavOpen(false)}
                     className={[
-                      "group flex items-center gap-3 rounded-xl px-3 py-3 text-[0.875rem] font-semibold leading-snug transition-colors sm:text-[0.925rem]",
-                      active ? "bg-white text-slate-950 shadow-sm" : "text-slate-400 hover:bg-white/[0.07] hover:text-white",
-                      collapsed ? "justify-center px-2.5 py-3" : "",
+                      "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                      active
+                        ? "bg-white text-neutral-900 shadow-sm"
+                        : "text-neutral-400 hover:bg-white/[0.07] hover:text-white",
+                      collapsed ? "justify-center px-2.5" : "",
                     ].join(" ")}
                     title={collapsed ? item.label : undefined}
                   >
                     {active && !collapsed ? (
-                      <span className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r bg-amber-400" aria-hidden />
+                      <span
+                        className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r bg-shop-accent"
+                        aria-hidden
+                      />
                     ) : null}
                     <NavIcon href={item.href} label={item.label} active={active} />
                     <span className={collapsed ? "sr-only" : "truncate"}>{item.label}</span>
@@ -121,18 +156,24 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
         <div className="shrink-0 border-t border-white/10 px-3 py-4">
           {!collapsed ? (
             <div className="rounded-2xl bg-white/[0.06] p-3 ring-1 ring-white/10">
-              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-slate-500">Workspace</p>
-              <p className="mt-1 truncate text-sm font-semibold text-slate-200">{deptLabel(user.department) || "Operations"}</p>
+              <p className="text-[0.625rem] font-semibold uppercase tracking-[0.16em] text-neutral-500">
+                Workspace
+              </p>
+              <p className="mt-1 truncate text-sm font-medium text-neutral-200">
+                {deptLabel(user.department) || "Operations"}
+              </p>
             </div>
           ) : null}
         </div>
       </aside>
 
-      <div className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-200 ease-out ${collapsed ? "lg:ml-[4.75rem]" : "lg:ml-72"}`}>
-        <header className="sticky top-0 z-20 flex min-h-16 shrink-0 items-center gap-2 border-b border-slate-200/70 bg-white/90 px-3 py-2 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85 sm:gap-3 sm:px-5">
+      <div
+        className={`flex min-w-0 flex-1 flex-col transition-[margin] duration-200 ease-out ${collapsed ? "lg:ml-[4.75rem]" : "lg:ml-72"}`}
+      >
+        <header className="sticky top-0 z-20 flex min-h-16 shrink-0 items-center gap-2 border-b border-shop-border bg-shop-surface-raised/90 px-3 py-2 backdrop-blur-md sm:gap-3 sm:px-5">
           <button
             type="button"
-            className="rounded-xl p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10 lg:hidden"
+            className="rounded-full p-2 text-shop-muted transition hover:bg-neutral-100 hover:text-foreground dark:hover:bg-neutral-800 lg:hidden"
             onClick={() => setMobileNavOpen(true)}
             aria-label="Open menu"
           >
@@ -140,7 +181,7 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
           </button>
           <button
             type="button"
-            className="hidden rounded-xl p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10 lg:inline-flex"
+            className="hidden rounded-full p-2 text-shop-muted transition hover:bg-neutral-100 hover:text-foreground dark:hover:bg-neutral-800 lg:inline-flex"
             onClick={toggleCollapsed}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
@@ -148,62 +189,75 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
           </button>
 
           <div className="min-w-0 flex-1 pl-0.5">
-            <p className="truncate text-lg font-semibold tracking-tight text-slate-950 dark:text-white">Ops command center</p>
-            <p className="truncate text-sm leading-snug text-slate-500 dark:text-slate-400">
+            <p className="truncate text-base font-semibold tracking-tight text-foreground sm:text-lg">
+              Ops command center
+            </p>
+            <p className="truncate text-xs text-shop-muted sm:text-sm">
               Catalog, warehouses, vendors and teams
             </p>
           </div>
 
           <div className="hidden lg:flex lg:w-[19rem]">
             <label className="relative block w-full">
-              <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+              <span className="sr-only">Search operations</span>
+              <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-shop-muted" />
               <input
                 type="search"
                 placeholder="Search operations..."
-                className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-3 text-[0.9375rem] text-slate-700 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:border-amber-400/50"
+                className="h-10 w-full rounded-full border border-shop-border bg-shop-surface py-2 pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-shop-muted focus:border-neutral-400 focus:bg-shop-surface-raised dark:focus:border-neutral-600"
               />
             </label>
           </div>
 
-          <Link
-            href="/map-test"
-            className="hidden shrink-0 rounded-xl bg-slate-950 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 lg:inline-flex"
-          >
-            Map Test
-          </Link>
+          <ThemeToggle />
 
-          <ThemeToggleButton
-            className={[
-              "shrink-0 rounded-full border p-2 text-slate-600 transition-colors",
-              "border-slate-200/90 bg-white hover:bg-slate-50",
-              "dark:border-white/10 dark:bg-white/5 dark:text-amber-100/90 dark:hover:bg-white/10",
-            ].join(" ")}
-          />
-
-          <div className="hidden min-w-0 items-center gap-3 sm:flex md:gap-4">
-            <div className="min-w-0 text-right">
-              <p className="truncate text-[0.9375rem] font-semibold text-slate-950 dark:text-slate-100">{user.name}</p>
-              <p className="max-w-[16rem] truncate text-xs leading-snug text-slate-500 dark:text-slate-400">
-                {deptLabel(user.department)} / {roleLabel(user.role)}
-              </p>
-              {user.email ? <p className="max-w-[16rem] truncate text-[0.75rem] text-slate-400 dark:text-slate-500">{user.email}</p> : null}
-            </div>
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-sm font-semibold text-white dark:bg-amber-300 dark:text-slate-950">
+          <div ref={profileRef} className="relative hidden sm:block">
+            <button
+              type="button"
+              onClick={() => setProfileOpen((open) => !open)}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-900 text-xs font-medium text-white dark:bg-neutral-100 dark:text-neutral-900"
+              aria-label="Open profile menu"
+              aria-expanded={profileOpen}
+            >
               {user.name.charAt(0).toUpperCase()}
-            </div>
+            </button>
+
+            {profileOpen ? (
+              <div className="absolute right-0 top-11 z-50 w-56 rounded-xl border border-shop-border bg-shop-surface-raised p-1.5 shadow-lg">
+                <div className="border-b border-shop-border px-3 py-2.5">
+                  <p className="truncate text-sm font-medium text-foreground">{user.name}</p>
+                  <p className="truncate text-xs text-shop-muted">
+                    {deptLabel(user.department)} / {roleLabel(user.role)}
+                  </p>
+                  {user.email ? (
+                    <p className="mt-0.5 truncate text-xs text-shop-muted">{user.email}</p>
+                  ) : null}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProfileOpen(false);
+                    void onLogout();
+                  }}
+                  className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                >
+                  Log out
+                </button>
+              </div>
+            ) : null}
           </div>
 
           <button
             type="button"
             onClick={() => void onLogout()}
-            className="shrink-0 rounded-xl border border-slate-200 px-3 py-2 text-[0.8125rem] font-semibold text-slate-700 hover:bg-slate-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/10 sm:px-4 sm:text-sm"
+            className="shrink-0 rounded-full border border-shop-border px-3 py-2 text-xs font-medium text-foreground transition hover:bg-neutral-100 dark:hover:bg-neutral-800 sm:px-4 sm:text-sm sm:hidden"
           >
             Log out
           </button>
         </header>
 
-        <main className="min-h-0 flex-1 overflow-y-auto bg-[#f4f7fb] dark:bg-slate-950">
-          <div className="w-full px-3 py-4 sm:px-4 sm:py-5 lg:px-5 lg:py-6">{children}</div>
+        <main className="min-h-0 flex-1 overflow-y-auto bg-shop-surface">
+          <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">{children}</div>
         </main>
       </div>
     </div>
@@ -211,7 +265,7 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
 }
 
 function NavIcon({ href, label, active }: { href: string; label: string; active: boolean }) {
-  const c = `h-5 w-5 shrink-0 ${active ? "text-slate-950" : "text-slate-500 group-hover:text-amber-300"}`;
+  const c = `h-5 w-5 shrink-0 ${active ? "text-neutral-900" : "text-neutral-500 group-hover:text-shop-accent"}`;
   const text = `${href} ${label}`.toLowerCase();
   if (text.includes("dashboard")) return <Icon className={c} path="M4 5h7v7H4V5Zm9 0h7v4h-7V5ZM4 14h7v5H4v-5Zm9-3h7v8h-7v-8Z" />;
   if (text.includes("user")) return <Icon className={c} path="M16 11a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0c2.5.6 4 2 4 4v2H4v-2c0-2 1.5-3.4 4-4" />;
@@ -226,7 +280,7 @@ function NavIcon({ href, label, active }: { href: string; label: string; active:
 
 function Icon({ className, path }: { className?: string; path: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden>
       <path strokeLinecap="round" strokeLinejoin="round" d={path} />
     </svg>
   );

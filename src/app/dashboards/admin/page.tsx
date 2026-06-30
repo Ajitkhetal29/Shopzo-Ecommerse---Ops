@@ -26,7 +26,7 @@ const toneClasses: Record<Metric["tone"], string> = {
     "bg-violet-50 text-violet-700 ring-violet-200 dark:bg-violet-500/10 dark:text-violet-200 dark:ring-violet-400/20",
   rose: "bg-rose-50 text-rose-700 ring-rose-200 dark:bg-rose-500/10 dark:text-rose-200 dark:ring-rose-400/20",
   slate:
-    "bg-slate-100 text-slate-700 ring-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:ring-white/10",
+    "bg-shop-surface text-foreground ring-shop-border dark:bg-neutral-800 dark:text-neutral-200 dark:ring-shop-border",
 };
 
 const pipeline = [
@@ -137,23 +137,23 @@ const AdminDashboardPage = () => {
 
   return (
     <div className="mx-auto flex w-full max-w-[96rem] flex-col gap-5">
-      <section className="overflow-hidden rounded-[1.5rem] border border-slate-200/80 bg-white shadow-sm dark:border-white/10 dark:bg-slate-900">
+      <section className="overflow-hidden rounded-2xl border border-shop-border bg-shop-surface-raised shadow-sm">
         <div className="grid gap-0 lg:grid-cols-[minmax(0,1.55fr)_minmax(22rem,0.75fr)]">
           <div className="p-5 sm:p-6 lg:p-8">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-200 dark:ring-emerald-400/20">
                 Live operations
               </span>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:ring-white/10">
+              <span className="rounded-full bg-shop-surface px-3 py-1 text-xs font-semibold text-shop-muted ring-1 ring-shop-border">
                 Admin workspace
               </span>
             </div>
 
             <div className="mt-8 max-w-3xl">
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-5xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
                 Command center for Shopzo operations
               </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-shop-muted sm:text-base">
                 Track teams, warehouses, vendors, catalog health, and fulfilment pressure from one focused control room.
               </p>
             </div>
@@ -161,26 +161,26 @@ const AdminDashboardPage = () => {
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 href="/products"
-                className="inline-flex h-11 items-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                className="inline-flex h-11 items-center rounded-full bg-neutral-900 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
               >
                 Review catalog
               </Link>
               <Link
                 href="/vendor"
-                className="inline-flex h-11 items-center rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 dark:border-white/10 dark:text-slate-200 dark:hover:bg-white/5"
+                className="inline-flex h-11 items-center rounded-full border border-shop-border px-4 text-sm font-semibold text-foreground transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
               >
                 Vendor queue
               </Link>
             </div>
           </div>
 
-          <div className="border-t border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-slate-950/50 lg:border-l lg:border-t-0 sm:p-6">
+          <div className="border-t border-shop-border bg-shop-surface p-5 lg:border-l lg:border-t-0 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-950 dark:text-white">Today overview</p>
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Operational throughput</p>
+                <p className="text-sm font-semibold text-foreground">Today overview</p>
+                <p className="mt-1 text-xs text-shop-muted">Operational throughput</p>
               </div>
-              <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:bg-slate-900 dark:text-emerald-300 dark:ring-emerald-400/20">
+              <span className="rounded-full bg-shop-surface-raised px-2.5 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:text-emerald-300 dark:ring-emerald-400/20">
                 Stable
               </span>
             </div>
@@ -189,11 +189,11 @@ const AdminDashboardPage = () => {
               {pipeline.map((item) => (
                 <div key={item.label}>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="font-medium text-slate-600 dark:text-slate-300">{item.label}</span>
-                    <span className="font-semibold tabular-nums text-slate-950 dark:text-white">{item.value}</span>
+                    <span className="font-medium text-shop-muted">{item.label}</span>
+                    <span className="font-semibold tabular-nums text-foreground">{item.value}</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-800">
-                    <div className="h-2 rounded-full bg-slate-950 dark:bg-amber-300" style={{ width: item.width }} />
+                  <div className="h-2 rounded-full bg-shop-border">
+                    <div className="h-2 rounded-full bg-shop-accent" style={{ width: item.width }} />
                   </div>
                 </div>
               ))}
@@ -203,7 +203,7 @@ const AdminDashboardPage = () => {
       </section>
 
       {isLoading ? (
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 text-sm font-medium text-slate-600 shadow-sm dark:border-white/10 dark:bg-slate-900 dark:text-slate-300">
+        <div className="rounded-2xl border border-shop-border bg-shop-surface-raised p-5 text-sm font-medium text-shop-muted shadow-sm">
           Loading dashboard metrics...
         </div>
       ) : null}
@@ -222,20 +222,20 @@ const AdminDashboardPage = () => {
           <Link
             key={stat.name}
             href={stat.href}
-            className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-white/10 dark:bg-slate-900 dark:hover:border-white/20"
+            className="group rounded-2xl border border-shop-border bg-shop-surface-raised p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-md dark:hover:border-neutral-600"
           >
             <div className="flex items-start justify-between gap-4">
               <div className={`flex h-11 w-11 items-center justify-center rounded-xl ring-1 ${toneClasses[stat.tone]}`}>
                 {stat.icon}
               </div>
-              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500 transition group-hover:text-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:group-hover:text-slate-200">
+              <span className="rounded-full bg-shop-surface px-2.5 py-1 text-xs font-semibold text-shop-muted transition group-hover:text-foreground">
                 Open
               </span>
             </div>
-            <p className="mt-5 text-sm font-medium text-slate-500 dark:text-slate-400">{stat.name}</p>
+            <p className="mt-5 text-sm font-medium text-shop-muted">{stat.name}</p>
             <div className="mt-2 flex items-end justify-between gap-3">
-              <p className="text-4xl font-semibold tracking-tight text-slate-950 dark:text-white">{stat.value}</p>
-              <p className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+              <p className="text-4xl font-semibold tracking-tight text-foreground">{stat.value}</p>
+              <p className="pb-1 text-xs font-semibold uppercase tracking-[0.12em] text-shop-muted">
                 {stat.change}
               </p>
             </div>
@@ -244,13 +244,13 @@ const AdminDashboardPage = () => {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_24rem]">
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-slate-900 sm:p-6">
+        <div className="rounded-2xl border border-shop-border bg-shop-surface-raised p-5 shadow-sm sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold tracking-tight text-slate-950 dark:text-white">Priority work</h2>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Fast actions for the ops team.</p>
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">Priority work</h2>
+              <p className="mt-1 text-sm text-shop-muted">Fast actions for the ops team.</p>
             </div>
-            <Link href="/genral" className="text-sm font-semibold text-slate-900 hover:text-amber-700 dark:text-slate-200 dark:hover:text-amber-300">
+            <Link href="/genral" className="text-sm font-semibold text-foreground hover:text-shop-accent">
               Manage settings
             </Link>
           </div>
@@ -260,21 +260,21 @@ const AdminDashboardPage = () => {
               <Link
                 key={task.title}
                 href={task.href}
-                className="rounded-xl border border-slate-200 p-4 transition hover:border-amber-300 hover:bg-amber-50/50 dark:border-white/10 dark:hover:border-amber-400/30 dark:hover:bg-amber-400/10"
+                className="rounded-xl border border-shop-border p-4 transition hover:border-shop-accent/40 hover:bg-shop-accent/5 dark:hover:border-shop-accent/30 dark:hover:bg-shop-accent/10"
               >
-                <p className="font-semibold text-slate-950 dark:text-white">{task.title}</p>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{task.meta}</p>
+                <p className="font-semibold text-foreground">{task.title}</p>
+                <p className="mt-1 text-sm text-shop-muted">{task.meta}</p>
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-slate-900 sm:p-6">
-          <h2 className="text-lg font-semibold tracking-tight text-slate-950 dark:text-white">Risk queue</h2>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Items that need admin attention.</p>
+        <div className="rounded-2xl border border-shop-border bg-shop-surface-raised p-5 shadow-sm sm:p-6">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground">Risk queue</h2>
+          <p className="mt-1 text-sm text-shop-muted">Items that need admin attention.</p>
           <div className="mt-5 space-y-3">
             {alerts.map((alert) => (
-              <div key={alert.title} className="rounded-xl border border-slate-200 p-4 dark:border-white/10">
+              <div key={alert.title} className="rounded-xl border border-shop-border p-4">
                 <div className="flex gap-3">
                   <span
                     className={[
@@ -283,8 +283,8 @@ const AdminDashboardPage = () => {
                     ].join(" ")}
                   />
                   <div>
-                    <p className="text-sm font-semibold text-slate-950 dark:text-white">{alert.title}</p>
-                    <p className="mt-1 text-sm leading-5 text-slate-500 dark:text-slate-400">{alert.detail}</p>
+                    <p className="text-sm font-semibold text-foreground">{alert.title}</p>
+                    <p className="mt-1 text-sm leading-5 text-shop-muted">{alert.detail}</p>
                   </div>
                 </div>
               </div>

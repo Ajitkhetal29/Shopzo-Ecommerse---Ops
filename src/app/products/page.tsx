@@ -114,16 +114,16 @@ const ProductPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <div className="flex flex-col gap-4 rounded-2xl border border-shop-border bg-shop-surface-raised p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">Products</h1>
-            <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">Products</h1>
+            <p className="mt-2 text-sm text-shop-muted">
               Manage products — click a product to view details
             </p>
           </div>
           <Link
             href="/products/add"
-            className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white"
+            className="inline-flex items-center justify-center rounded-full bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-white"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -132,7 +132,7 @@ const ProductPage = () => {
           </Link>
         </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
+      <div className="rounded-2xl border border-shop-border bg-shop-surface-raised p-4 shadow-sm">
         <div className="flex flex-wrap items-center gap-3">
           <select
             value={categoryId}
@@ -140,7 +140,7 @@ const ProductPage = () => {
               setCategoryId(e.target.value);
               setPagination({ ...pagination, page: 1 });
             }}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="rounded-xl border border-shop-border bg-shop-surface px-3 py-2 text-sm text-foreground outline-none transition focus:border-shop-accent focus:ring-2 focus:ring-shop-accent/10"
           >
             <option value="">All categories</option>
             {categories.map((c) => (
@@ -155,7 +155,7 @@ const ProductPage = () => {
               setSubcategoryId(e.target.value);
               setPagination({ ...pagination, page: 1 });
             }}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="rounded-xl border border-shop-border bg-shop-surface px-3 py-2 text-sm text-foreground outline-none transition focus:border-shop-accent focus:ring-2 focus:ring-shop-accent/10"
             disabled={!categoryId}
           >
             <option value="">All subcategories</option>
@@ -171,7 +171,7 @@ const ProductPage = () => {
               setVendorId(e.target.value);
               setPagination({ ...pagination, page: 1 });
             }}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none transition focus:border-amber-400/70 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="rounded-xl border border-shop-border bg-shop-surface px-3 py-2 text-sm text-foreground outline-none transition focus:border-shop-accent focus:ring-2 focus:ring-shop-accent/10"
           >
             <option value="">All vendors</option>
             {vendors.map((v) => (
@@ -189,7 +189,7 @@ const ProductPage = () => {
                 setVendorId("");
                 setPagination({ ...pagination, page: 1 });
               }}
-              className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+              className="rounded-full border border-shop-border px-3 py-2 text-sm font-medium text-shop-muted transition hover:bg-neutral-100 hover:text-foreground dark:hover:bg-neutral-800"
             >
               Clear filters
             </button>
@@ -198,7 +198,7 @@ const ProductPage = () => {
       </div>
 
       {products.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-12 text-center shadow-sm dark:border-slate-700/70 dark:bg-slate-900/90">
+          <div className="rounded-2xl border border-shop-border bg-shop-surface-raised p-12 text-center shadow-sm">
             <svg
               className="mx-auto h-12 w-12 text-slate-400 dark:text-slate-500"
               fill="none"
@@ -235,9 +235,9 @@ const ProductPage = () => {
                   key={product._id}
                   type="button"
                   onClick={() => router.push(`/products/${product._id}`)}
-                  className="group overflow-hidden rounded-2xl border border-slate-200/80 bg-white text-left shadow-sm transition-all hover:border-amber-500/35 hover:shadow-md dark:border-slate-700/70 dark:bg-slate-900/90"
+                  className="group overflow-hidden rounded-2xl border border-shop-border bg-shop-surface-raised text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-shop-accent/35 hover:shadow-md"
                 >
-                  <div className="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
+                  <div className="relative aspect-square overflow-hidden bg-shop-surface">
                     {product.images?.[0]?.url ? (
                       <img src={product.images[0].url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
                     ) : (
@@ -245,10 +245,10 @@ const ProductPage = () => {
                     )}
                   </div>
                   <div className="p-3">
-                    <h3 className="truncate text-sm font-semibold text-slate-900 transition group-hover:text-amber-700 dark:text-white dark:group-hover:text-amber-200">
+                    <h3 className="truncate text-sm font-semibold text-foreground transition group-hover:text-shop-accent">
                       {product.name}
                     </h3>
-                    <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                    <p className="mt-0.5 text-xs text-shop-muted">
                       {product.category.name}
                       {product.subcategory ? ` · ${product.subcategory.name}` : ""} · {product.vendor.name}
                     </p>
@@ -287,7 +287,7 @@ const ProductPage = () => {
                         onClick={() => setPagination((prev) => ({ ...prev, page: pageNum }))}
                         className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
                           pagination.page === pageNum
-                            ? "bg-amber-600 text-white"
+                            ? "bg-shop-accent text-white"
                             : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-700"
                         }`}
                       >

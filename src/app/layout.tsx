@@ -1,32 +1,31 @@
 import type { Metadata } from "next";
-import ThemeInit from "./components/ThemeInit";
+import { Inter } from "next/font/google";
 import AppChrome from "./components/AppChrome";
 import Providers from "./provider";
 import "./globals.css";
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Shopzo Ops",
   description: "Shopzo operations dashboard",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased">
-      <ThemeInit />
-      <Providers>
-        <AppChrome>{children}</AppChrome>
-      </Providers>
-
-
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <Providers>
+          <AppChrome>{children}</AppChrome>
+        </Providers>
       </body>
     </html>
   );
