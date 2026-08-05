@@ -22,6 +22,7 @@ const getSidebarMenuItems = (
           { label: "Support", href: "/dashboards/support" },
           { label: "Products", href: "/products" },
           { label: "Orders", href: "/orders" },
+          { label: "Refunds", href: "/refunds" },
         ];
     }
   }
