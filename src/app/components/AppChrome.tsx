@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { API_ENDPOINTS } from "@/lib/api";
 import type { AppDispatch, RootState } from "@/store";
 import { logout, setUser } from "@/store/slices/authSlice";
+import { isOpsEligibleUser } from "@/services/appInit";
 import { getSidebarMenuItems } from "@/services/menuHelper";
 import AppShell from "./AppShell";
 
@@ -26,6 +27,11 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
     }
 
     if (user) {
+      if (!isOpsEligibleUser(user)) {
+        dispatch(logout());
+        router.push("/login");
+        return;
+      }
       setIsVerifying(false);
       return;
     }
@@ -37,7 +43,7 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
       try {
         const res = await axios.get(API_ENDPOINTS.CURRENT_USER, { withCredentials: true });
         if (!mounted) return;
-        if (res.data?.success && res.data.user) {
+        if (res.data?.success && res.data.user && isOpsEligibleUser(res.data.user)) {
           dispatch(setUser(res.data.user));
         } else {
           router.push("/login");
