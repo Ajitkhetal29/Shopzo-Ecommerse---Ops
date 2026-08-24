@@ -21,6 +21,7 @@ const getSidebarMenuItems = (
           { label: "General", href: "/genral" },
           { label: "Support", href: "/dashboards/support" },
           { label: "Products", href: "/products" },
+          { label: "Inventory", href: "/inventory" },
           { label: "Orders", href: "/orders" },
           { label: "Refunds", href: "/refunds" },
         ];

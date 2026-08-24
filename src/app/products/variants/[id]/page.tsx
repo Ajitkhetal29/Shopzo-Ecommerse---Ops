@@ -158,6 +158,13 @@ export default function ProductVariantsPage() {
                 <div className="flex gap-2 flex-shrink-0">
                   <button
                     type="button"
+                    onClick={() => router.push(`/inventory?variantId=${v._id}`)}
+                    className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-800 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
+                  >
+                    Stock
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => router.push(`/products/variants/edit/${v._id}`)}
                     className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-800 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800"
                   >

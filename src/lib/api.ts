@@ -96,6 +96,7 @@ export const API_ENDPOINTS = {
   GET_VARIANT_BY_ID: `${API_BASE_URL}/product/variants`, // GET /:id
   GENERATE_UPLOAD_URL: `${API_BASE_URL}/upload/generate-upload-url`,
 
+  GET_STOCK_MAP: `${API_BASE_URL}/inventory/stock-map`,
   GET_ORDERS: `${API_BASE_URL}/order/list`,
   GET_REFUNDS: `${API_BASE_URL}/refund/list`,
   UPDATE_REFUND_STATUS: `${API_BASE_URL}/refund`,
