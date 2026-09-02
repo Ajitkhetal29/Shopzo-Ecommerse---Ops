@@ -244,7 +244,12 @@ function InventoryStockInner() {
                   </div>
 
                   {variant.locations.length === 0 ? (
-                    <p className="text-sm text-shop-muted">No inventory rows for this variant.</p>
+                    <p className="text-sm text-shop-muted">
+                      This variant is in the catalog, but no warehouse or vendor has stock yet.
+                      Add inventory in the warehouse/vendor panel, or seed it with
+                      {" "}
+                      <code className="font-mono text-xs">--slug {product.slug}</code>.
+                    </p>
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="min-w-full text-left text-sm">
