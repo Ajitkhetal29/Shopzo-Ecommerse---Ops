@@ -10,21 +10,23 @@ const getSidebarMenuItems = (
   const roleName = nameOf(user?.role);
 
   if (dept === "Admin") {
-    switch (roleName) {
-      case "Admin":
-        return [
-          { label: "Dashboard", href: "/dashboards/admin" },
-          { label: "Analytics", href: "#" },
-          { label: "Users", href: "/users" },
-          { label: "Warehouses", href: "/warehouse" },
-          { label: "Vendors", href: "/vendor" }, 
-          { label: "General", href: "/genral" },
-          { label: "Support", href: "/dashboards/support" },
-          { label: "Products", href: "/products" },
-          { label: "Inventory", href: "/inventory" },
-          { label: "Orders", href: "/orders" },
-          { label: "Refunds", href: "/refunds" },
-        ];
+    const isAdminRole = /^(super\s*)?admin$/i.test(roleName || "");
+    if (isAdminRole) {
+      return [
+        { label: "Dashboard", href: "/dashboards/admin" },
+        { label: "Approvals", href: "/approvals" },
+        { label: "Analytics", href: "#" },
+        { label: "Users", href: "/users" },
+        { label: "Warehouses", href: "/warehouse" },
+        { label: "Vendors", href: "/vendor" },
+        { label: "General", href: "/genral" },
+        { label: "Support", href: "/dashboards/support" },
+        { label: "Products", href: "/products" },
+        { label: "Inventory", href: "/inventory" },
+        { label: "Orders", href: "/orders" },
+        { label: "Order history", href: "/orders/history" },
+        { label: "Refunds", href: "/refunds" },
+      ];
     }
   }
 

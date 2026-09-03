@@ -29,7 +29,7 @@ export const isOpsEligibleUser = (user: User | null | undefined): boolean => {
 
 export const isAdminUser = (user: User | null | undefined): boolean => {
   if (!user) return false;
-  return named(user.role) === "admin";
+  return /^(super\s*)?admin$/.test(named(user.role));
 };
 
 const logFetchError = (label: string, err: unknown) => {

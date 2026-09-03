@@ -60,6 +60,10 @@ export const API_ENDPOINTS = {
   DELETE_VENDOR: `${API_BASE_URL}/vendor/delete`, // :id
   GET_VENDOR_BY_ID: `${API_BASE_URL}/vendor`,  // get by id
 
+  GET_PENDING_APPROVALS: `${API_BASE_URL}/approvals/pending`,
+  REVIEW_WAREHOUSE_APPROVAL: `${API_BASE_URL}/approvals/warehouse`,
+  REVIEW_VENDOR_APPROVAL: `${API_BASE_URL}/approvals/vendor`,
+
 
 
   GET_REPORTING : `${API_BASE_URL}/user-reporting/list`,
@@ -98,6 +102,7 @@ export const API_ENDPOINTS = {
 
   GET_STOCK_MAP: `${API_BASE_URL}/inventory/stock-map`,
   GET_ORDERS: `${API_BASE_URL}/order/list`,
+  GET_ORDER_BY_ID: `${API_BASE_URL}/order`,
   GET_REFUNDS: `${API_BASE_URL}/refund/list`,
   UPDATE_REFUND_STATUS: `${API_BASE_URL}/refund`,
 };
