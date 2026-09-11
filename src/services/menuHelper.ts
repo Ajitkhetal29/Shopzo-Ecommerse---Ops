@@ -15,6 +15,7 @@ const getSidebarMenuItems = (
       return [
         { label: "Dashboard", href: "/dashboards/admin" },
         { label: "Approvals", href: "/approvals" },
+        { label: "Delivery KYC", href: "/delivery-agents" },
         { label: "Analytics", href: "#" },
         { label: "Users", href: "/users" },
         { label: "Warehouses", href: "/warehouse" },

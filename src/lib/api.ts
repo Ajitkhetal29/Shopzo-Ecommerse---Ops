@@ -64,6 +64,10 @@ export const API_ENDPOINTS = {
   REVIEW_WAREHOUSE_APPROVAL: `${API_BASE_URL}/approvals/warehouse`,
   REVIEW_VENDOR_APPROVAL: `${API_BASE_URL}/approvals/vendor`,
 
+  GET_PENDING_DELIVERY_AGENTS: `${API_BASE_URL}/delivery-agent/pending`,
+  APPROVE_DELIVERY_AGENT: `${API_BASE_URL}/delivery-agent`, // POST /:id/approve
+  REJECT_DELIVERY_AGENT: `${API_BASE_URL}/delivery-agent`, // POST /:id/reject
+
 
 
   GET_REPORTING : `${API_BASE_URL}/user-reporting/list`,

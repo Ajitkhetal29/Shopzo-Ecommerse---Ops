@@ -113,7 +113,9 @@ export default function ApprovalsPage() {
                   <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{item.email}</p>
                   <p className="text-sm text-slate-600 dark:text-slate-400">{item.contactNumber}</p>
                   <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                    {item.address?.formatted || [item.address?.city, item.address?.state].filter(Boolean).join(", ") || "No address"}
+                    {item.address?.formatted ||
+                      [item.address?.city, item.address?.state].filter(Boolean).join(", ") ||
+                      "No address"}
                   </p>
                 </div>
                 <div className="flex gap-2">
