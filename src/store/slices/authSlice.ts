@@ -17,6 +17,8 @@ export type User = {
   id?: string; // For backward compatibility
   name: string;
   email: string;
+  phone?: string;
+  profileImage?: string;
   department: Department ; // Can be object or string for backward compatibility
   role: Role ; // Can be object or string for backward compatibility
   isActive: boolean;

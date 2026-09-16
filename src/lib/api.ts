@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
   LOGIN: `${API_BASE_URL}/auth/login`,
   LOGOUT: `${API_BASE_URL}/auth/logout`,
   CURRENT_USER: `${API_BASE_URL}/me`,
+  UPDATE_PROFILE: `${API_BASE_URL}/user/profile`,
 
   
   // dashboard stats

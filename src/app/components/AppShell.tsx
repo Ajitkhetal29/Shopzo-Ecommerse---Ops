@@ -233,6 +233,13 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
                     <p className="mt-0.5 truncate text-xs text-shop-muted">{user.email}</p>
                   ) : null}
                 </div>
+                <Link
+                  href="/profile"
+                  onClick={() => setProfileOpen(false)}
+                  className="mt-1 flex w-full items-center rounded-lg px-3 py-2 text-left text-sm text-foreground transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                >
+                  Profile
+                </Link>
                 <button
                   type="button"
                   onClick={() => {
@@ -268,6 +275,7 @@ function NavIcon({ href, label, active }: { href: string; label: string; active:
   const c = `h-5 w-5 shrink-0 ${active ? "text-neutral-900" : "text-neutral-500 group-hover:text-shop-accent"}`;
   const text = `${href} ${label}`.toLowerCase();
   if (text.includes("dashboard")) return <Icon className={c} path="M4 5h7v7H4V5Zm9 0h7v4h-7V5ZM4 14h7v5H4v-5Zm9-3h7v8h-7v-8Z" />;
+  if (text.includes("profile")) return <Icon className={c} path="M16 11a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0c2.5.6 4 2 4 4v2H4v-2c0-2 1.5-3.4 4-4" />;
   if (text.includes("user")) return <Icon className={c} path="M16 11a4 4 0 10-8 0m8 0a4 4 0 01-8 0m8 0c2.5.6 4 2 4 4v2H4v-2c0-2 1.5-3.4 4-4" />;
   if (text.includes("warehouse")) return <Icon className={c} path="M3 21h18M5 21V8l7-4 7 4v13M8 21v-6h8v6M8 11h8" />;
   if (text.includes("vendor")) return <Icon className={c} path="M4 10h16l-1-5H5l-1 5Zm1 0v9h14v-9M8 19v-5h4v5" />;

@@ -85,7 +85,7 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const menuItems = getSidebarMenuItems(user);
+  const menuItems = [...getSidebarMenuItems(user), { label: "Profile", href: "/profile" }];
   const dashboardEntry = menuItems.find((m) => m.label.toLowerCase() === "dashboard");
   const brandHref = dashboardEntry?.href ?? menuItems[0]?.href ?? "/";
 
