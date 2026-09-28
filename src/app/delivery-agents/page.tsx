@@ -27,8 +27,21 @@ type AgentItem = {
     licensePhoto?: string;
   };
   kycSubmittedAt?: string;
+  approvedAt?: string;
   createdAt?: string;
+  approvalStatus?: "incomplete" | "pending" | "approved" | "rejected" | string;
+  isActive?: boolean;
+  rejectionReason?: string | null;
 };
+
+type QueueStatus = "pending" | "approved" | "rejected" | "all";
+
+const TABS: { id: QueueStatus; label: string }[] = [
+  { id: "pending", label: "Pending" },
+  { id: "approved", label: "Approved" },
+  { id: "rejected", label: "Rejected" },
+  { id: "all", label: "All" },
+];
 
 function addr(a?: { formatted?: string; city?: string; state?: string }) {
   return a?.formatted || [a?.city, a?.state].filter(Boolean).join(", ") || "—";
@@ -40,24 +53,33 @@ export default function DeliveryAgentsPage() {
   const [actingId, setActingId] = useState<string | null>(null);
   const [rejectId, setRejectId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
+  const [status, setStatus] = useState<QueueStatus>("pending");
+  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
 
-  const fetchPending = useCallback(async () => {
+  useEffect(() => {
+    const timer = setTimeout(() => setQuery(search.trim()), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const fetchAgents = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await axios.get(API_ENDPOINTS.GET_PENDING_DELIVERY_AGENTS, {
+      const res = await axios.get(API_ENDPOINTS.LIST_DELIVERY_AGENTS, {
         withCredentials: true,
+        params: { status, q: query || undefined },
       });
       if (res.data.success) setAgents(res.data.agents || []);
     } catch {
-      toast.error("Failed to load delivery KYC queue");
+      toast.error("Failed to load delivery partners");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [query, status]);
 
   useEffect(() => {
-    fetchPending();
-  }, [fetchPending]);
+    fetchAgents();
+  }, [fetchAgents]);
 
   const approve = async (id: string) => {
     setActingId(id);
@@ -69,7 +91,7 @@ export default function DeliveryAgentsPage() {
       );
       if (res.data.success) {
         toast.success(res.data.message);
-        await fetchPending();
+        await fetchAgents();
       } else toast.error(res.data.message || "Approve failed");
     } catch (error) {
       toast.error(
@@ -92,7 +114,7 @@ export default function DeliveryAgentsPage() {
         toast.success(res.data.message);
         setRejectId(null);
         setRejectReason("");
-        await fetchPending();
+        await fetchAgents();
       } else toast.error(res.data.message || "Reject failed");
     } catch (error) {
       toast.error(
@@ -103,6 +125,36 @@ export default function DeliveryAgentsPage() {
     }
   };
 
+  const setActive = async (id: string, isActive: boolean) => {
+    setActingId(id);
+    try {
+      const res = await axios.patch(
+        `${API_ENDPOINTS.SET_DELIVERY_AGENT_ACTIVE}/${id}/active`,
+        { isActive },
+        { withCredentials: true }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        await fetchAgents();
+      } else toast.error(res.data.message || "Update failed");
+    } catch (error) {
+      toast.error(
+        axios.isAxiosError(error) ? error.response?.data?.message || "Update failed" : "Update failed"
+      );
+    } finally {
+      setActingId(null);
+    }
+  };
+
+  const emptyCopy =
+    status === "pending"
+      ? "Submitted Aadhaar + vehicle packs show up here."
+      : status === "approved"
+        ? "Approved partners show up here."
+        : status === "rejected"
+          ? "Rejected KYC packs show up here."
+          : "No delivery partners match this search.";
+
   return (
     <div className="space-y-7 sm:space-y-8">
       <div className="border-b border-slate-200/80 pb-6 dark:border-slate-700/60">
@@ -110,9 +162,38 @@ export default function DeliveryAgentsPage() {
           Delivery agent KYC
         </h1>
         <p className="mt-2 max-w-2xl text-[0.9375rem] leading-relaxed text-slate-600 dark:text-slate-400">
-          Partners register with basic details first. This queue is only KYC submissions waiting for
-          approval before they can take jobs.
+          Review pending KYC, look up approved or rejected partners, and deactivate an approved account
+          from here.
         </p>
+      </div>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-2">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => {
+                setStatus(tab.id);
+                setRejectId(null);
+                setRejectReason("");
+              }}
+              className={`h-9 rounded-xl px-3 text-sm font-semibold ${
+                status === tab.id
+                  ? "bg-amber-600 text-white"
+                  : "border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search name, email, mobile, id"
+          className="h-10 w-full rounded-xl border border-slate-300 bg-transparent px-3 text-sm sm:max-w-xs dark:border-slate-600"
+        />
       </div>
 
       {loading ? (
@@ -121,10 +202,8 @@ export default function DeliveryAgentsPage() {
         </div>
       ) : agents.length === 0 ? (
         <div className="rounded-2xl border border-slate-200/80 bg-card p-12 text-center shadow-sm dark:border-slate-600/80 dark:bg-slate-800/80">
-          <h3 className="text-base font-semibold text-slate-900 dark:text-white">No pending KYC</h3>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Submitted Aadhaar + vehicle packs show up here.
-          </p>
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white">Nothing in this view</h3>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{emptyCopy}</p>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -136,16 +215,26 @@ export default function DeliveryAgentsPage() {
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="min-w-0 flex-1 space-y-3">
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{agent.name}</h2>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h2 className="text-lg font-semibold text-slate-900 dark:text-white">{agent.name}</h2>
+                      <StatusPill status={agent.approvalStatus || "incomplete"} />
+                      {agent.approvalStatus === "approved" ? (
+                        <StatusPill status={agent.isActive === false ? "inactive" : "active"} />
+                      ) : null}
+                    </div>
                     <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                       {agent.shopzoDeliveryId} · {agent.email} · {agent.contact}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
-                      KYC submitted{" "}
-                      {agent.kycSubmittedAt
-                        ? new Date(agent.kycSubmittedAt).toLocaleString()
-                        : "—"}
+                      {agent.approvalStatus === "approved" && agent.approvedAt
+                        ? `Approved ${new Date(agent.approvedAt).toLocaleString()}`
+                        : agent.kycSubmittedAt
+                          ? `KYC submitted ${new Date(agent.kycSubmittedAt).toLocaleString()}`
+                          : "KYC not submitted"}
                     </p>
+                    {agent.approvalStatus === "rejected" && agent.rejectionReason ? (
+                      <p className="mt-2 text-sm text-red-700 dark:text-red-300">{agent.rejectionReason}</p>
+                    ) : null}
                   </div>
 
                   <div className="grid gap-3 text-sm sm:grid-cols-2">
@@ -205,7 +294,7 @@ export default function DeliveryAgentsPage() {
                   ) : null}
                 </div>
 
-                {rejectId !== agent._id ? (
+                {agent.approvalStatus === "pending" && rejectId !== agent._id ? (
                   <div className="flex shrink-0 gap-2">
                     <button
                       type="button"
@@ -225,12 +314,44 @@ export default function DeliveryAgentsPage() {
                     </button>
                   </div>
                 ) : null}
+                {agent.approvalStatus === "approved" ? (
+                  <div className="flex shrink-0">
+                    <button
+                      type="button"
+                      disabled={actingId === agent._id}
+                      onClick={() => setActive(agent._id, agent.isActive === false)}
+                      className={`h-10 rounded-xl px-4 text-sm font-semibold disabled:opacity-60 ${
+                        agent.isActive === false
+                          ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                          : "border border-red-300 text-red-700 dark:border-red-900 dark:text-red-300"
+                      }`}
+                    >
+                      {agent.isActive === false ? "Reactivate" : "Deactivate"}
+                    </button>
+                  </div>
+                ) : null}
               </div>
             </article>
           ))}
         </div>
       )}
     </div>
+  );
+}
+
+function StatusPill({ status }: { status: string }) {
+  const className =
+    status === "approved" || status === "active"
+      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-400/15 dark:text-emerald-300"
+      : status === "pending"
+        ? "bg-amber-100 text-amber-800 dark:bg-amber-400/15 dark:text-amber-200"
+        : status === "rejected" || status === "inactive"
+          ? "bg-red-100 text-red-700 dark:bg-red-400/15 dark:text-red-300"
+          : "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300";
+  return (
+    <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold capitalize ${className}`}>
+      {status}
+    </span>
   );
 }
 

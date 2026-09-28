@@ -18,6 +18,17 @@ const VendorPage = () => {
   const [error, setError] = useState("");
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedVendorId, setSelectedVendorId] = useState<string | null>(null);
+  const [pagination, setPagination] = useState({ page: 1, limit: 10 });
+
+  const total = vendors.length;
+  const totalPages = Math.max(1, Math.ceil(total / pagination.limit));
+  const currentPage = Math.min(pagination.page, totalPages);
+  const startCount = total === 0 ? 0 : (currentPage - 1) * pagination.limit + 1;
+  const endCount = Math.min(currentPage * pagination.limit, total);
+  const pageVendors = vendors.slice(
+    (currentPage - 1) * pagination.limit,
+    currentPage * pagination.limit
+  );
 
   const fetchVendors = async () => {
     setLoading(true);
@@ -166,7 +177,7 @@ const VendorPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 bg-white dark:divide-slate-700 dark:bg-slate-800/80">
-                {vendors.map((vendor) => (
+                {pageVendors.map((vendor) => (
                   <tr key={vendor._id} className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/40">
                     <td className="whitespace-nowrap px-6 py-4">
                       <div className="flex items-center">
@@ -207,6 +218,63 @@ const VendorPage = () => {
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="flex flex-col gap-3 border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-700/40 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="text-sm text-slate-600 dark:text-slate-300">
+              Showing {startCount} to {endCount} of {total} vendors
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPagination((prev) => ({ ...prev, page: Math.max(currentPage - 1, 1) }))}
+                disabled={currentPage === 1}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                  currentPage === 1
+                    ? "cursor-not-allowed bg-slate-200 text-slate-400 dark:bg-slate-600 dark:text-slate-400"
+                    : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                }`}
+              >
+                Previous
+              </button>
+              {Array.from({ length: 5 }, (_, i) => {
+                const pageNum = currentPage - 2 + i;
+                if (pageNum <= 0 || pageNum > totalPages) return null;
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setPagination((prev) => ({ ...prev, page: pageNum }))}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                      currentPage === pageNum
+                        ? "bg-amber-600 text-white"
+                        : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => setPagination((prev) => ({ ...prev, page: currentPage + 1 }))}
+                disabled={currentPage >= totalPages}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
+                  currentPage >= totalPages
+                    ? "cursor-not-allowed bg-slate-200 text-slate-400 dark:bg-slate-600 dark:text-slate-400"
+                    : "bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                }`}
+              >
+                Next
+              </button>
+              <select
+                value={pagination.limit}
+                onChange={(e) =>
+                  setPagination({ page: 1, limit: parseInt(e.target.value, 10) })
+                }
+                className="ml-1 h-9 rounded-lg border border-slate-300 bg-white px-2 text-sm text-slate-700 outline-none transition focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200"
+              >
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={50}>50</option>
+              </select>
+            </div>
           </div>
         </div>
       )}
