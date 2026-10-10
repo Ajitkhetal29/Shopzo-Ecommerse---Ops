@@ -67,6 +67,7 @@ export const API_ENDPOINTS = {
 
   GET_PENDING_DELIVERY_AGENTS: `${API_BASE_URL}/delivery-agent/pending`,
   LIST_DELIVERY_AGENTS: `${API_BASE_URL}/delivery-agent/list`,
+  LIST_DELIVERY_PARTNERS: `${API_BASE_URL}/delivery-agent/directory`,
   APPROVE_DELIVERY_AGENT: `${API_BASE_URL}/delivery-agent`, // POST /:id/approve
   REJECT_DELIVERY_AGENT: `${API_BASE_URL}/delivery-agent`, // POST /:id/reject
   SET_DELIVERY_AGENT_ACTIVE: `${API_BASE_URL}/delivery-agent`, // PATCH /:id/active

@@ -34,13 +34,12 @@ type AgentItem = {
   rejectionReason?: string | null;
 };
 
-type QueueStatus = "pending" | "approved" | "rejected" | "all";
+type QueueStatus = "pending" | "approved" | "rejected";
 
 const TABS: { id: QueueStatus; label: string }[] = [
   { id: "pending", label: "Pending" },
   { id: "approved", label: "Approved" },
   { id: "rejected", label: "Rejected" },
-  { id: "all", label: "All" },
 ];
 
 function addr(a?: { formatted?: string; city?: string; state?: string }) {
@@ -151,9 +150,7 @@ export default function DeliveryAgentsPage() {
       ? "Submitted Aadhaar + vehicle packs show up here."
       : status === "approved"
         ? "Approved partners show up here."
-        : status === "rejected"
-          ? "Rejected KYC packs show up here."
-          : "No delivery partners match this search.";
+        : "Rejected KYC packs show up here.";
 
   return (
     <div className="space-y-7 sm:space-y-8">

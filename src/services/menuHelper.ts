@@ -16,6 +16,7 @@ const getSidebarMenuItems = (
         { label: "Dashboard", href: "/dashboards/admin" },
         { label: "Approvals", href: "/approvals" },
         { label: "Delivery KYC", href: "/delivery-agents" },
+        { label: "Delivery partners", href: "/delivery-partners" },
         { label: "Delivery rates", href: "/delivery-rates" },
         { label: "Analytics", href: "#" },
         { label: "Users", href: "/users" },
