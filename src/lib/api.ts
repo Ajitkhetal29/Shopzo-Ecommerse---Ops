@@ -110,4 +110,8 @@ export const API_ENDPOINTS = {
   GET_ORDER_BY_ID: `${API_BASE_URL}/order`,
   GET_REFUNDS: `${API_BASE_URL}/refund/list`,
   UPDATE_REFUND_STATUS: `${API_BASE_URL}/refund`,
+  
+  GENERATE_PRODUCT_DESCRIPTION: `${API_BASE_URL}/google-api-studio/generate-product-description`,
+
+  // 
 };
