@@ -30,6 +30,7 @@ const AddProductPage = () => {
     slug: "",
   });
 
+
   useEffect(() => {
     axios
       .get(API_ENDPOINTS.GET_CATEGORIES, { withCredentials: true })
@@ -92,27 +93,38 @@ const AddProductPage = () => {
 
 
   const handleGenerateProductDescription = async () => {
+    const name = formData.name.trim();
+    const categoryName = categories.find((cat) => cat._id === formData.category)?.name;
+    const subcategoryName = subcategories.find((sub) => sub._id === formData.subcategory)?.name;
+
+    if (!name || !categoryName) {
+      toast.error("Enter a product name and select a category first");
+      return;
+    }
+
     setGenratingDescription(true);
     try {
-      const response = await axios.post(API_ENDPOINTS.GENERATE_PRODUCT_DESCRIPTION, {
-        name: formData.name,
-        category: formData.category.name,
-        subcategory: formData.subcategory.name,
-      }, { withCredentials: true });
+      const response = await axios.post(
+        API_ENDPOINTS.GENERATE_PRODUCT_DESCRIPTION,
+        {
+          name,
+          category: categoryName,
+          subcategory: subcategoryName || undefined,
+        },
+        { withCredentials: true },
+      );
       if (response.data.success) {
         setFormData((prev) => ({ ...prev, description: response.data.data }));
       } else {
         toast.error(response.data.message || "Failed to generate product description");
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error(error);
       toast.error("Failed to generate product description");
-    }
-    finally {
+    } finally {
       setGenratingDescription(false);
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
