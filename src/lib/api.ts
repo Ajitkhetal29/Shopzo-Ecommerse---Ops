@@ -117,6 +117,7 @@ export const API_ENDPOINTS = {
   UPDATE_REFUND_STATUS: `${API_BASE_URL}/refund`,
   
   GENERATE_PRODUCT_DESCRIPTION: `${API_BASE_URL}/google-api-studio/generate-product-description`,
+  NOTIFICATIONS: `${API_BASE_URL}/notifications`,
 
   // 
 };

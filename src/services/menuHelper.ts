@@ -14,6 +14,7 @@ const getSidebarMenuItems = (
     if (isAdminRole) {
       return [
         { label: "Dashboard", href: "/dashboards/admin" },
+        { label: "Notifications", href: "/notifications" },
         { label: "Approvals", href: "/approvals" },
         { label: "Delivery KYC", href: "/delivery-agents" },
         { label: "Delivery partners", href: "/delivery-partners" },
@@ -38,6 +39,7 @@ const getSidebarMenuItems = (
       case "Manager":
         return [
           { label: "Dashboard", href: "/dashboards/delivery" },
+          { label: "Notifications", href: "/notifications" },
           { label: "Orders", href: "/delivery/orders" },
           { label: "History", href: "/delivery/orders/history" },
           { label: "Team", href: "/delivery/team" },
@@ -46,6 +48,7 @@ const getSidebarMenuItems = (
       case "Team Leader":
         return [
           { label: "Dashboard", href: "/dashboards/delivery" },
+          { label: "Notifications", href: "/notifications" },
           { label: "Orders", href: "/delivery/orders" },
           { label: "History", href: "/delivery/orders/history" },
           { label: "Team", href: "/delivery/team" },
@@ -54,6 +57,7 @@ const getSidebarMenuItems = (
       case "Team Member":
         return [
           { label: "Dashboard", href: "/dashboards/delivery" },
+          { label: "Notifications", href: "/notifications" },
           { label: "Orders", href: "/delivery/orders" },
           { label: "History", href: "/delivery/orders/history" },
         ];
@@ -66,6 +70,7 @@ const getSidebarMenuItems = (
       case "Manager":
         return [
           { label: "Dashboard", href: "/dashboards/support" },
+          { label: "Notifications", href: "/notifications" },
           { label: "Tickets", href: "/support/tickets" },
           { label: "History", href: "/support/tickets/history" },
           { label: "Team", href: "/support/team" },
@@ -74,6 +79,7 @@ const getSidebarMenuItems = (
       case "Team Leader":
         return [
           { label: "Dashboard", href: "/dashboards/support" },
+          { label: "Notifications", href: "/notifications" },
           { label: "Tickets", href: "/support/tickets" },
           { label: "History", href: "/support/tickets/history" },
           { label: "Team", href: "/support/team" },
@@ -82,6 +88,7 @@ const getSidebarMenuItems = (
       case "Team Member":
         return [
           { label: "Dashboard", href: "/dashboards/support" },
+          { label: "Notifications", href: "/notifications" },
           { label: "Tickets", href: "/support/tickets" },
           { label: "History", href: "/support/tickets/history" },
         ];

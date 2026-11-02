@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { User } from "@/store/slices/authSlice";
 import ThemeToggle from "@/app/components/ThemeToggle";
+import NotificationBell from "@/app/components/notifications/NotificationBell";
 import { publicUrl } from "@/lib/basePath";
 
 const SIDEBAR_KEY = "shopzo-sidebar-collapsed";
@@ -209,6 +210,7 @@ export default function AppShell({ children, menuItems, user, brandHref, onLogou
             </label>
           </div>
 
+          <NotificationBell />
           <ThemeToggle />
 
           <div ref={profileRef} className="relative hidden sm:block">
@@ -283,6 +285,7 @@ function NavIcon({ href, label, active }: { href: string; label: string; active:
   if (text.includes("order")) return <Icon className={c} path="M7 4h10l2 4v12H5V8l2-4Zm-2 4h14M9 12h6M9 16h4" />;
   if (text.includes("support")) return <Icon className={c} path="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-5v.01M9.75 9a2.25 2.25 0 1 1 3.6 1.8c-.8.6-1.35 1.1-1.35 2.2" />;
   if (text.includes("analytics")) return <Icon className={c} path="M4 19V5M4 19h16M8 15l3-3 3 2 4-6" />;
+  if (text.includes("notification")) return <Icon className={c} path="M15 17h5l-1.4-1.4a2 2 0 0 1-.6-1.4V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5m6 0a3 3 0 1 1-6 0" />;
   return <Icon className={c} path="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />;
 }
 
